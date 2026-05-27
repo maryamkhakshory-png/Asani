@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ultimate Toolbox Pro | ۱۳۰+ ابزار آفلاین</title>
+  <meta name="theme-color" content="#0b1a24">
+  <link rel="manifest" href="data:application/json,{}">
+  <style>
+    :root {
+      --bg: #0b1a24; --bg2: #0f2a38; --glass: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12); --accent: #00d4aa; --accent2: #4facfe;
+      --text: #f0f0f0; --text2: #aaa; --radius: 16px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+      --font: system-ui, 'Segoe UI', Tahoma, sans-serif;
+    }
+    .light { --bg: #eef2f5; --bg2: #dce3e8; --glass: rgba(255,255,255,0.7);
+      --border: rgba(0,0,0,0.08); --text: #1a1a2e; --text2: #555;
+      --shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:var(--font); background:radial-gradient(circle at 20% 30%, var(--bg2), var(--bg));
+      color:var(--text); min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden;
+      transition:background var(--transition),color var(--transition); }
+    #app { flex:1; display:flex; flex-direction:column; height:100vh; }
+    .header { background:rgba(10,20,30,0.85); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px);
+      padding:0.7rem 1rem; box-shadow:0 4px 30px rgba(0,0,0,0.5); border-bottom:1px solid var(--border);
+      display:flex; flex-direction:column; align-items:center; gap:0.4rem; position:sticky; top:0; z-index:50; }
+    .header h1 { font-size:1.4rem; background:linear-gradient(135deg,var(--accent),var(--accent2));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:800; letter-spacing:0.5px; }
+    .controls { display:flex; width:100%; max-width:500px; gap:0.4rem; align-items:center; }
+    #globalSearch { flex:1; padding:0.5rem 1rem; border-radius:30px; border:1px solid var(--border);
+      background:rgba(255,255,255,0.08); color:var(--text); font-size:0.85rem; outline:none;
+      backdrop-filter:blur(10px); transition:var(--transition); }
+    #globalSearch:focus { border-color:var(--accent); box-shadow:0 0 15px rgba(0,212,170,0.4); }
+    .icon-btn { background:var(--glass); border:1px solid var(--border); color:var(--text);
+      padding:0.4rem 0.7rem; border-radius:30px; cursor:pointer; font-size:0.85rem; backdrop-filter:blur(10px);
+      transition:var(--transition); white-space:nowrap; display:flex; align-items:center; gap:0.2rem; }
+    .icon-btn:hover { background:rgba(255,255,255,0.15); }
+    #main { flex:1; overflow-y:auto; padding:1rem; -webkit-overflow-scrolling:touch; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:1rem; }
+    .card { background:var(--glass); backdrop-filter:blur(15px); border:1px solid var(--border);
+      border-radius:var(--radius); padding:1.1rem 0.7rem; text-align:center; cursor:pointer;
+      transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      box-shadow:var(--shadow); position:relative; }
+    .card:hover { transform:translateY(-3px); border-color:var(--accent); box-shadow:0 12px 30px rgba(0,212,170,0.2); }
+    .card:active { transform:scale(0.97); }
+    .card .icon { font-size:1.8rem; display:block; margin-bottom:0.3rem; }
+    .card .name { font-size:0.8rem; font-weight:600; line-height:1.3; }
+    .card .fav-star { position:absolute; top:6px; left:6px; font-size:1rem; cursor:pointer; z-index:2; opacity:0.5; transition:0.2s; }
+    .card .fav-star.active { opacity:1; color:#ffd700; }
+    .card .info-dot { position:absolute; top:6px; right:6px; width:20px; height:20px; border-radius:50%;
+      background:rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center;
+      font-size:0.6rem; color:#fff; cursor:help; z-index:2; transition:0.2s; }
+    .card .info-dot:hover { background:var(--accent); color:#000; }
+    .tool-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:var(--glass); border:1px solid var(--border);
+      color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; transition:0.2s; }
+    .back-btn:hover { background:rgba(255,255,255,0.15); }
+    .fav-btn { background:none; border:none; font-size:1.5rem; cursor:pointer; margin-right:auto; }
+    input, select, textarea { font-family:inherit; }
+    .tool-input, .tool-select, .tool-textarea { width:100%; margin-bottom:0.8rem; padding:0.6rem;
+      border-radius:10px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text);
+      font-size:0.85rem; outline:none; transition:0.2s; }
+    .tool-input:focus, .tool-select:focus, .tool-textarea:focus { border-color:var(--accent); box-shadow:0 0 8px rgba(0,212,170,0.3); }
+    .btn { background:linear-gradient(135deg,var(--accent),#00a88f); color:#000; border:none;
+      padding:0.5rem 1rem; border-radius:25px; font-weight:bold; cursor:pointer; margin:0.2rem;
+      transition:var(--transition); display:inline-block; }
+    .btn:hover { transform:scale(1.03); box-shadow:0 5px 15px rgba(0,212,170,0.4); }
+    .btn:active { transform:scale(0.97); }
+    .result { background:rgba(0,0,0,0.3); border-radius:10px; padding:0.7rem; margin:0.8rem 0;
+      font-family:monospace; word-break:break-all; border:1px solid var(--border); white-space:pre-wrap; }
+    .toast-container { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:200;
+      display:flex; flex-direction:column; gap:0.5rem; pointer-events:none; }
+    .toast { padding:0.6rem 1.2rem; border-radius:30px; background:rgba(0,0,0,0.85); color:#fff;
+      backdrop-filter:blur(10px); font-size:0.85rem; animation:toastIn 0.3s ease; pointer-events:auto; }
+    @keyframes toastIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+      z-index:100; display:flex; align-items:center; justify-content:center; padding:1rem; }
+    .modal { background:rgba(20,30,40,0.95); backdrop-filter:blur(25px); border-radius:20px;
+      width:100%; max-width:450px; max-height:80vh; overflow-y:auto; padding:1.5rem;
+      border:1px solid var(--border); position:relative; }
+    .modal .close { position:absolute; top:0.5rem; right:0.5rem; background:none; border:none;
+      color:#aaa; font-size:1.5rem; cursor:pointer; width:36px; height:36px; border-radius:50%; }
+    .modal .close:hover { background:rgba(255,255,255,0.1); color:#fff; }
+    .coin-scene { perspective:600px; width:120px; height:120px; margin:1rem auto; }
+    .coin { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 2s ease; }
+    .coin .side { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:bold;
+      text-shadow:0 2px 4px rgba(0,0,0,0.6); }
+    .coin .front { background:radial-gradient(circle at 35% 30%, #ffe066, #b8860b); color:#fff; }
+    .coin .back { background:radial-gradient(circle at 35% 30%, #e0e0e0, #606060); color:#fff; transform:rotateY(180deg); }
+    .dice-scene { perspective:500px; width:120px; height:120px; margin:1.5rem auto; }
+    .dice-cube { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.8s ease; }
+    .dice-cube .face { position:absolute; width:120px; height:120px; background:#fff; border:2px solid #333;
+      border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2.8rem;
+      font-weight:bold; backface-visibility:hidden; box-shadow:inset 0 0 20px rgba(0,0,0,0.2); color:#222; }
+    .face.front{transform:translateZ(60px)} .face.back{transform:rotateY(180deg) translateZ(60px)}
+    .face.right{transform:rotateY(90deg) translateZ(60px)} .face.left{transform:rotateY(-90deg) translateZ(60px)}
+    .face.top{transform:rotateX(90deg) translateZ(60px)} .face.bottom{transform:rotateX(-90deg) translateZ(60px)}
+    .hidden { display:none!important; }
+    @media(max-width:400px){ .grid{grid-template-columns:repeat(3,1fr)} }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header class="header">
+    <h1>🧰 جعبه ابزار حرفه‌ای</h1>
+    <div class="controls">
+      <input type="search" id="globalSearch" placeholder="جستجوی سریع (Ctrl+K)..." aria-label="جستجو در ابزارها">
+      <button class="icon-btn" id="themeToggle" aria-label="تغییر تم">🌓</button>
+      <button class="icon-btn" id="favBtn" aria-label="علاقه‌مندی‌ها">⭐</button>
+      <button class="icon-btn" id="recentBtn" aria-label="اخیر">🕐</button>
+      <button class="icon-btn" id="permBtn" aria-label="دسترسی‌ها">🔐</button>
+    </div>
+  </header>
+  <main id="main" role="main"></main>
+</div>
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+<div id="overlay" class="overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ========== SERVICE WORKER REGISTRATION ========== */
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE_NAME = 'toolbox-v1';
+    const ASSETS = ['/'];
+    self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))));
+    self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+  `;
+  const blob = new Blob([swCode], {type: 'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+/* ========== UTILITIES ========== */
+const $ = (sel, ctx=document) => ctx.querySelector(sel);
+const escapeHtml = str => { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; };
+const debounce = (fn, delay=200) => { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); }; };
+let uniqueIdCounter = 0;
+const uid = () => `u_${++uniqueIdCounter}`;
+const isValidNumber = n => !isNaN(parseFloat(n)) && isFinite(n);
+
+const sha256=function(t){"use strict";function e(t,e){return t>>>e|t<<32-e}for(var r,n,o,h,a,i,c,s,u,f,p,l,g,v,d,y,b,m,w,A,x=[];x[t>>9]=0;);return function(t){for(var e="",r=0;r<4*t.length;r++)e+="0123456789abcdef".charAt(t[r>>2]>>8*(3-r%4)+4&15);return e}(function(t,e){var r,n,o,h,a,i,c,s,u,f,p,l,g,v,d,y,b,m,w,A,x=[];for(t[e>>5]|=128<<24-e%32,t[15+(e+64>>9<<4)]=e,r=0;r<t.length;r+=16){n=o=0;for(h=a=0;h<16;h++)x[h]=t[r+h];for(h=16;h<64;h++)x[h]=(s=x[h-2],u=x[h-7],f=x[h-15],p=x[h-16],((s>>>17|s<<15)^(s>>>19|s<<13)^s>>>10)+x[h-7]+((f>>>7|f<<25)^(f>>>18|f<<14)^f>>>3)+x[h-16]);for(var i=this.state.concat(),c=0;c<64;c+=8){var v=this.gamma0(i[0]),d=this.maj(i[0],i[1],i[2]),y=this.gamma1(i[4]),b=this.ch(i[4],i[5],i[6]),m=i[7]+y+b+this.K[c]+x[c];i[7]=i[6];i[6]=i[5];i[5]=i[4];i[4]=i[3]+m;i[3]=i[2];i[2]=i[1];i[1]=i[0];i[0]=m+v+d}for(h=0;h<8;h++)this.state[h]+=i[h]}return this.state},this.state=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225],this.gamma0=function(t){return e(t,2)^e(t,13)^e(t,22)},this.gamma1=function(t){return e(t,6)^e(t,11)^e(t,25)},this.ch=function(t,e,r){return t&e^~t&r},this.maj=function(t,e,r){return t&e^t&r^e&r},this.K=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298],this)([].slice.call(function(t){for(var e=[],r=0;r<8*t.length;r+=8)e[r>>5]|=t.charCodeAt(r/8)<<24-r%32;return e}(t)))};
+const md5=function(t){"use strict";function e(t,e){return t<<e|t>>>32-e}function r(t,e){var r=2147483648&t,n=2147483648&e,o=1073741824&t,h=1073741824&e,a=(1073741823&t)+(1073741823&e);return o&h?2147483648^a^r^n:o|h?1073741824&a?3221225472^a^r^n:1073741824^a^r^n:a^r^n}function n(t,n,o){return t&n|~t&o}function o(t,n,o){return t&o|n&~o}function h(t,n,o){return t^n^o}function a(t,n,o){return n^(t|~o)}function i(t,n,o,h,a,i,c){return t=r(t,r(r(n,o),r(h,a)),i),r(e(t,c),n)}return function(t){for(var e,r=Array(0);t.length>8;)r.push(t.splice(0,8));r.push(t);for(var f=[],l=0;l<16;l++)f.push(0);for(var p=0;p<r.length;p++)for(var g=r[p],v=0;v<64;v++)f[v]=g[v]?parseInt(g[v],2):0;var d=1732584193,y=4023233417,b=2562383102,m=271733878,w=3285377520;for(var A,x=0;x<f.length;x+=16){var k=d,C=y,S=b,T=m,E=w;for(var L=0;L<16;L++){A=i(y,b,m,w,d,f[x+L],7,3614090360);w=m;m=b;b=e(y,22);y=d;d=A}for(var M=16;M<32;M++){A=n(y,b,m,w,d,f[x+((5*M+1)%16)],5,3905402710);w=m;m=b;b=e(y,22);y=d;d=A}for(var I=32;I<48;I++){A=o(y,b,m,w,d,f[x+((3*I+5)%16)],4,606105819);w=m;m=b;b=e(y,22);y=d;d=A}for(var N=48;N<64;N++){A=a(y,b,m,w,d,f[x+(7*I%16)],6,3250441966);w=m;m=b;b=e(y,22);y=d;d=A}d=r(d,k);y=r(y,C);b=r(b,S);m=r(m,T);w=r(w,E)}return function(t,e){for(var r=[],n=0;n<4;n++)r.push(((t>>8*n)&255).toString(16));return r.reverse().join("")}(d)+function(t,e){for(var r=[],n=0;n<4;n++)r.push(((t>>8*n)&255).toString(16));return r.reverse().join("")}(y)}(""===t?"":t.replace(/\r\n/g,"\n").split("").map(function(e){return e.charCodeAt(0).toString(2).padStart(8,"0")}).join("").match(/.{512}/g)||[""])};
+
+/* ========== APP STATE ========== */
+const App = {
+  state: { theme:'dark', favorites:new Set(), recent:[], currentView:'home', currentCategory:null, currentToolId:null, viewHistory:[], sortMode:'default' },
+  init() { this.loadState(); this.applyTheme(); ToolRegistry.init(); Favorites.init(); Permissions.init(); Toast.init(); Navigation.init(); SearchEngine.init(); this.bindGlobalEvents(); },
+  loadState() { try { const raw=localStorage.getItem('appstate'); if(raw){ const s=JSON.parse(raw); if(s.theme)this.state.theme=s.theme; if(s.favorites)this.state.favorites=new Set(s.favorites); if(s.recent)this.state.recent=s.recent; if(s.sortMode)this.state.sortMode=s.sortMode; } } catch(e){} },
+  saveState() { localStorage.setItem('appstate', JSON.stringify({ theme:this.state.theme, favorites:[...this.state.favorites], recent:this.state.recent.slice(0,20), sortMode:this.state.sortMode })); },
+  applyTheme() { document.body.classList.toggle('light', this.state.theme==='light'); document.getElementById('themeToggle').textContent = this.state.theme==='dark'?'☀️':'🌙'; },
+  toggleTheme() { this.state.theme = this.state.theme==='dark'?'light':'dark'; this.applyTheme(); this.saveState(); Toast.show(`تم ${this.state.theme==='dark'?'تیره':'روشن'} فعال شد`); },
+  exportData() {
+    const data = { favorites: [...this.state.favorites], recent: this.state.recent, theme: this.state.theme, sortMode: this.state.sortMode, notes: localStorage.getItem('note')||'', tasks: localStorage.getItem('tasks')||'[]' };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'toolbox_backup.json'; a.click();
+    Toast.show('تنظیمات و داده‌ها خروجی گرفته شد');
+  },
+  importData(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.favorites) this.state.favorites = new Set(data.favorites);
+        if (data.recent) this.state.recent = data.recent;
+        if (data.theme) { this.state.theme = data.theme; this.applyTheme(); }
+        if (data.sortMode) this.state.sortMode = data.sortMode;
+        if (data.notes !== undefined) localStorage.setItem('note', data.notes);
+        if (data.tasks !== undefined) localStorage.setItem('tasks', data.tasks);
+        this.saveState();
+        Toast.show('تنظیمات با موفقیت بازیابی شد');
+        Navigation.refreshCurrentView();
+      } catch(ex) { Toast.show('فایل بکاپ نامعتبر است'); }
+    };
+    reader.readAsText(file);
+  },
+  bindGlobalEvents() {
+    document.getElementById('themeToggle').onclick = ()=>this.toggleTheme();
+    document.getElementById('favBtn').onclick = ()=>Navigation.showFavorites();
+    document.getElementById('recentBtn').onclick = ()=>Navigation.showRecent();
+    document.getElementById('permBtn').onclick = ()=>Permissions.showManager();
+    document.addEventListener('keydown', e=>{
+      if((e.ctrlKey||e.metaKey)&&e.key==='k'){ e.preventDefault(); document.getElementById('globalSearch').focus(); }
+      if(e.key==='Escape'){ const overlay=document.getElementById('overlay'); if(!overlay.classList.contains('hidden'))overlay.classList.add('hidden'); if(this.state.currentView!=='home')Navigation.goBack(); }
+    });
+    document.getElementById('overlay').addEventListener('click', function(e){ if(e.target===this)this.classList.add('hidden'); });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+    document.addEventListener('touchend', e => {
+      if (App.state.currentView === 'tool') return;
+      const diff = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(diff) > 80) {
+        if (diff > 0) Navigation.goBack();
+      }
+    }, {passive: true});
+  }
+};
+
+const Toast = {
+  container:null,
+  init(){ this.container=document.getElementById('toastContainer'); },
+  show(msg, type='info'){ const el=document.createElement('div'); el.className='toast'; el.textContent=(type==='success'?'✅ ':'')+msg; this.container.appendChild(el); setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),300);},2000); }
+};
+
+const Favorites = {
+  init(){ this.set=App.state.favorites; },
+  toggle(id){ if(this.set.has(id))this.set.delete(id); else this.set.add(id); App.saveState(); Navigation.refreshCurrentView(); Toast.show(this.set.has(id)?'⭐ اضافه شد':'از علاقه‌مندی‌ها حذف شد'); },
+  isFav(id){ return this.set.has(id); },
+  getTools(){ return ToolRegistry.tools.filter(t=>this.set.has(t.id)); }
+};
+
+const Permissions = {
+  perms: { camera:{name:'دوربین',granted:false,reason:'اسکن QR'}, location:{name:'موقعیت',granted:false,reason:'قطب‌نما و GPS'}, microphone:{name:'میکروفون',granted:false,reason:'یادداشت صوتی'}, storage:{name:'حافظه',granted:true,reason:'ذخیره تنظیمات و یادداشت‌ها'} },
+  init(){ const saved=localStorage.getItem('perms'); if(saved){ try{ const p=JSON.parse(saved); Object.keys(this.perms).forEach(k=>{if(p[k]!==undefined)this.perms[k].granted=p[k];}); }catch(e){} } },
+  save(){ const p={}; Object.keys(this.perms).forEach(k=>p[k]=this.perms[k].granted); localStorage.setItem('perms',JSON.stringify(p)); },
+  request(key){ return new Promise(resolve=>{ if(this.perms[key].granted){resolve(true);return;} this.showDialog(key,resolve); }); },
+  showDialog(key,resolve){ const overlay=document.getElementById('overlay'),modal=document.getElementById('modal'); modal.innerHTML=`<button class="close" onclick="document.getElementById('overlay').classList.add('hidden')">✕</button><h3>🔐 ${this.perms[key].name}</h3><p>${this.perms[key].reason}</p><div style="display:flex;gap:0.5rem;margin-top:1rem"><button class="btn" id="grantBtn">✅ اعطا</button><button class="btn" style="background:#666" id="denyBtn">❌ رد</button></div>`; overlay.classList.remove('hidden'); document.getElementById('grantBtn').onclick=()=>{this.perms[key].granted=true;this.save();overlay.classList.add('hidden');resolve(true);}; document.getElementById('denyBtn').onclick=()=>{overlay.classList.add('hidden');resolve(false);}; },
+  showManager(){ const overlay=document.getElementById('overlay'),modal=document.getElementById('modal'); let html='<button class="close" onclick="document.getElementById(\'overlay\').classList.add(\'hidden\')">✕</button><h3>🔐 مدیریت دسترسی‌ها</h3>'; Object.keys(this.perms).forEach(k=>{const p=this.perms[k];html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid var(--border)"><span>${p.name}: ${p.reason}</span><button class="btn" data-perm="${k}" style="background:${p.granted?'var(--accent)':'#666'}">${p.granted?'✅ فعال':'❌ غیرفعال'}</button></div>`;}); html+=`<hr><button class="btn" id="exportBtn">📤 خروجی تنظیمات</button> <button class="btn" id="importBtn">📥 ورودی تنظیمات</button><input type="file" id="importFile" accept=".json" class="hidden">`; modal.innerHTML=html; overlay.classList.remove('hidden'); modal.querySelectorAll('[data-perm]').forEach(btn=>{btn.onclick=()=>{const k=btn.dataset.perm;this.perms[k].granted=!this.perms[k].granted;this.save();btn.textContent=this.perms[k].granted?'✅ فعال':'❌ غیرفعال';btn.style.background=this.perms[k].granted?'var(--accent)':'#666';};}); document.getElementById('exportBtn').onclick=()=>App.exportData(); document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click(); document.getElementById('importFile').onchange=e=>{if(e.target.files[0])App.importData(e.target.files[0]);}; }
+};
+/* ========== TOOL REGISTRY ========== */
+const ToolRegistry = {
+  tools: [],
+  categoryMap: new Map(),
+  init() { this.registerAll(); this.buildCategoryMap(); },
+  registerAll() {
+    const add = (cfg) => this.tools.push(cfg);
+    const addConv = (id, cat, name, icon, units, factorMap, desc) => {
+      add({ id, category:cat, name, icon, desc:desc||`تبدیل بین واحدهای ${name}`, usage:`مقدار عددی را وارد کنید، واحد مبدأ و مقصد را انتخاب نمایید.`,
+        render(container) {
+          const idPrefix = uid();
+          container.innerHTML = `<h2>${name}</h2><input class="tool-input" id="${idPrefix}_val" placeholder="مقدار" value="1"><select class="tool-select" id="${idPrefix}_from">${units.map(u=>`<option>${u}</option>`).join('')}</select><select class="tool-select" id="${idPrefix}_to">${units.map(u=>`<option>${u}</option>`).join('')}</select><button class="btn" id="${idPrefix}_btn">🔄 تبدیل</button><div class="result" id="${idPrefix}_res"></div>`;
+          document.getElementById(`${idPrefix}_btn`).onclick = () => {
+            const v = parseFloat(document.getElementById(`${idPrefix}_val`).value);
+            const f = document.getElementById(`${idPrefix}_from`).value;
+            const t = document.getElementById(`${idPrefix}_to`).value;
+            const resEl = document.getElementById(`${idPrefix}_res`);
+            if (!isValidNumber(v)) { resEl.innerText = '⚠️ لطفاً عدد معتبر وارد کنید'; return; }
+            const result = (v * factorMap[f]) / factorMap[t];
+            resEl.innerText = `${v} ${f} = ${result.toFixed(6)} ${t}`;
+          };
+        }
+      });
+    };
+
+    // ------------------- مبدل‌ها (20 ابزار) -------------------
+    addConv('length','مبدل‌ها','📏 طول','📏',['متر','کیلومتر','سانتیمتر','میلیمتر','مایل','یارد','فوت','اینچ'],{'متر':1,'کیلومتر':1000,'سانتیمتر':0.01,'میلیمتر':0.001,'مایل':1609.34,'یارد':0.9144,'فوت':0.3048,'اینچ':0.0254},'این ابزار به شما کمک می‌کند طول را بین واحدهای مختلف مانند متر، کیلومتر، مایل، فوت و اینچ تبدیل کنید. کاربرد آن در نقشه‌کشی، مهندسی، مسافرت و محاسبات روزمره است.');
+    addConv('weight','مبدل‌ها','⚖️ وزن','⚖️',['کیلوگرم','گرم','میلی‌گرم','تن','پوند','اونس'],{'کیلوگرم':1,'گرم':0.001,'میلی‌گرم':1e-6,'تن':1000,'پوند':0.453592,'اونس':0.0283495},'این ابزار وزن را بین واحدهای متریک (کیلوگرم، گرم) و واحدهای انگلیسی (پوند، اونس) تبدیل می‌کند. برای آشپزی، ورزش، پزشکی و خریدهای بین‌المللی بسیار مفید است.');
+    add({ id:'temp', category:'مبدل‌ها', name:'🌡️ دما', icon:'🌡️',
+      desc:'تبدیل دما بین سه مقیاس سلسیوس (سانتی‌گراد)، فارنهایت و کلوین. سلسیوس در اکثر کشورها استفاده می‌شود، فارنهایت در آمریکا رایج است و کلوین مقیاس علمی و مطلق دماست.',
+      usage:'عدد دما را وارد کرده و واحدهای مبدأ و مقصد را انتخاب کنید. مثلاً ۱۰۰ درجه سلسیوس معادل ۲۱۲ درجه فارنهایت (نقطه جوش آب) است.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🌡️ دما</h2><input class="tool-input" id="${id}_val" value="0"><select class="tool-select" id="${id}_from"><option>C</option><option>F</option><option>K</option></select><select class="tool-select" id="${id}_to"><option>F</option></select><button class="btn" id="${id}_btn">🔄 تبدیل</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const v=parseFloat(document.getElementById(`${id}_val`).value); if(!isValidNumber(v)){document.getElementById(`${id}_res`).innerText='⚠️ عدد وارد کنید';return;} const f=document.getElementById(`${id}_from`).value,t=document.getElementById(`${id}_to`).value; let r; if(f===t)r=v; else if(f==='C'&&t==='F')r=v*9/5+32; else if(f==='C'&&t==='K')r=v+273.15; else if(f==='F'&&t==='C')r=(v-32)*5/9; else if(f==='F'&&t==='K')r=(v-32)*5/9+273.15; else if(f==='K'&&t==='C')r=v-273.15; else if(f==='K'&&t==='F')r=(v-273.15)*9/5+32; document.getElementById(`${id}_res`).innerText=`${v}°${f} = ${r.toFixed(4)}°${t}`; };
+      }
+    });
+    addConv('speed','مبدل‌ها','🚀 سرعت','🚀',['km/h','m/s','mph','knot'],{'km/h':0.277778,'m/s':1,'mph':0.44704,'knot':0.514444},'سرعت را بین کیلومتر بر ساعت (km/h)، متر بر ثانیه (m/s)، مایل بر ساعت (mph) و گره دریایی (knot) تبدیل کنید. در رانندگی، ورزش و دریانوردی کاربرد دارد.');
+    addConv('area','مبدل‌ها','📐 مساحت','📐',['مترمربع','کیلومترمربع','هکتار','فوت‌مربع','ایکر'],{'مترمربع':1,'کیلومترمربع':1e6,'هکتار':10000,'فوت‌مربع':0.092903,'ایکر':4046.86},'مساحت را بین واحدهای مختلف مانند مترمربع، هکتار (برای زمین‌های کشاورزی) و فوت‌مربع تبدیل کنید. در خرید ملک، کشاورزی و معماری کاربرد فراوان دارد.');
+    addConv('volume','مبدل‌ها','🧴 حجم','🧴',['لیتر','میلی‌لیتر','گالن','مترمکعب','فوت‌مکعب'],{'لیتر':1,'میلی‌لیتر':0.001,'گالن':3.78541,'مترمکعب':1000,'فوت‌مکعب':28.3168},'حجم را بین لیتر، گالن (رایج در آمریکا)، مترمکعب و دیگر واحدها تبدیل کنید. برای آشپزی، خرید سوخت و محاسبات مهندسی مفید است.');
+    addConv('data','مبدل‌ها','💾 داده','💾',['بایت','KB','MB','GB','TB'],{'بایت':1,'KB':1024,'MB':1048576,'GB':1073741824,'TB':1099511627776},'واحدهای ذخیره‌سازی دیجیتال را تبدیل کنید. مثلاً بدانید چند مگابایت در یک گیگابایت است یا یک فایل چند بایت حجم دارد. در کامپیوتر و موبایل روزمره کاربرد دارد.');
+    addConv('pressure','مبدل‌ها','⚡ فشار','⚡',['bar','psi','atm','Pa','mmHg'],{bar:1,psi:0.0689476,atm:1.01325,Pa:1e-5,mmHg:0.00133322},'فشار را بین واحدهای bar (رایج در اروپا)، psi (رایج در آمریکا برای باد لاستیک)، اتمسفر و پاسکال تبدیل کنید.');
+    addConv('energy','مبدل‌ها','🔋 انرژی','🔋',['ژول','کیلوژول','کالری','وات‌ساعت'],{'ژول':1,'کیلوژول':1000,'کالری':4.184,'وات‌ساعت':3600},'انرژی را بین ژول (واحد علمی)، کالری (رایج در تغذیه) و وات‌ساعت (مصرف برق) تبدیل کنید. در رژیم غذایی و محاسبه مصرف انرژی کاربرد دارد.');
+    addConv('power','مبدل‌ها','💪 توان','💪',['وات','کیلووات','اسب‌بخار'],{'وات':1,'کیلووات':1000,'اسب‌بخار':745.7},'توان را بین وات (واحد استاندارد)، کیلووات و اسب‌بخار (برای موتور خودرو) تبدیل کنید. در برق و مکانیک کاربرد دارد.');
+    addConv('angle','مبدل‌ها','📐 زاویه','📐',['درجه','رادیان','گراد'],{'درجه':1,'رادیان':57.2958,'گراد':0.9},'زاویه را بین درجه (رایج در زندگی روزمره)، رادیان (واحد ریاضی) و گراد تبدیل کنید. در ریاضیات، نقشه‌برداری و مهندسی کاربرد دارد.');
+    add({ id:'fuel', category:'مبدل‌ها', name:'⛽ مصرف سوخت', icon:'⛽',
+      desc:'تبدیل بین واحدهای مصرف سوخت خودرو: کیلومتر بر لیتر (km/L) رایج در ایران، لیتر بر ۱۰۰ کیلومتر (L/100km) رایج در اروپا، و مایل بر گالن (mpg) رایج در آمریکا.',
+      usage:'عدد و واحد مبدأ/مقصد را انتخاب کنید. عدد کمتر در L/100km یعنی مصرف بهینه‌تر، اما در km/L و mpg عدد بیشتر بهتر است.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>⛽ مصرف سوخت</h2><input class="tool-input" id="${id}_val" value="5"><select class="tool-select" id="${id}_from"><option>km/L</option><option>L/100km</option><option>mpg</option></select><select class="tool-select" id="${id}_to"><option>km/L</option></select><button class="btn" id="${id}_btn">🔄 تبدیل</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const v=parseFloat(document.getElementById(`${id}_val`).value); if(!isValidNumber(v)){document.getElementById(`${id}_res`).innerText='⚠️ عدد معتبر وارد کنید';return;} const f=document.getElementById(`${id}_from`).value,t=document.getElementById(`${id}_to`).value; let l100=f==='km/L'?100/v:f==='L/100km'?v:235.214/v; const res=t==='km/L'?100/l100:t==='L/100km'?l100:235.214/l100; document.getElementById(`${id}_res`).innerText=`${v} ${f} = ${res.toFixed(4)} ${t}`; };
+      }
+    });
+    addConv('density','مبدل‌ها','⚛️ چگالی','⚛️',['kg/m³','g/cm³','lb/ft³'],{'kg/m³':1,'g/cm³':1000,'lb/ft³':16.0185},'چگالی (جرم در واحد حجم) را تبدیل کنید. مثلاً چگالی آب ۱ گرم بر سانتی‌متر مکعب یا ۱۰۰۰ کیلوگرم بر مترمکعب است.');
+    addConv('accel','مبدل‌ها','🏎️ شتاب','🏎️',['m/s²','ft/s²','g'],{'m/s²':1,'ft/s²':0.3048,'g':9.80665},'شتاب را بین متر بر مجذور ثانیه، فوت بر مجذور ثانیه و g (شتاب جاذبه زمین ≈ 9.8) تبدیل کنید.');
+    addConv('torque','مبدل‌ها','🔧 گشتاور','🔧',['Nm','lb-ft'],{'Nm':1,'lb-ft':1.35582},'گشتاور (نیروی چرخشی) را بین نیوتن‌متر و پوند-فوت تبدیل کنید. در خودرو و مهندسی مکانیک کاربرد دارد.');
+    addConv('viscosity','مبدل‌ها','🧪 گرانروی','🧪',['Pa·s','P'],{'Pa·s':1,'P':0.1},'گرانروی (مقاومت شاره در برابر جاری شدن) را تبدیل کنید. مثلاً عسل گرانروی بالاتری نسبت به آب دارد.');
+    addConv('dataRate','مبدل‌ها','📶 نرخ داده','📶',['bps','Kbps','Mbps','Gbps'],{bps:1,Kbps:1e3,Mbps:1e6,Gbps:1e9},'سرعت انتقال داده را بین بیت بر ثانیه، کیلوبیت، مگابیت و گیگابیت تبدیل کنید. برای اینترنت و شبکه کاربرد دارد.');
+    addConv('illuminance','مبدل‌ها','💡 روشنایی','💡',['lux','foot-candle'],{lux:1,'foot-candle':10.764},'شدت روشنایی را بین لوکس (استاندارد) و فوت-کندل تبدیل کنید. در عکاسی و طراحی نورپردازی استفاده می‌شود.');
+    addConv('radiation','مبدل‌ها','☢️ دز تابش','☢️',['Gray','Rad'],{Gray:1,Rad:0.01},'دز تابش یونیزه‌کننده را تبدیل کنید. در پزشکی هسته‌ای و رادیولوژی کاربرد دارد.');
+    add({ id:'currency', category:'مبدل‌ها', name:'💵 ارز', icon:'💵',
+      desc:'تبدیل ارزهای رایج با نرخ‌های تقریبی. نرخ‌ها به‌صورت دستی در کد قابل تنظیم هستند.',
+      usage:'مبلغ و ارز مبدأ و مقصد را انتخاب کنید.',
+      render(c){ const rates={IRR:1,USD:520000,EUR:570000,GBP:660000,TRY:18000}; const id=uid(); c.innerHTML=`<h2>💵 ارز</h2><input class="tool-input" id="${id}_val" value="1"><select class="tool-select" id="${id}_from">${Object.keys(rates).map(k=>`<option>${k}</option>`).join('')}</select><select class="tool-select" id="${id}_to"><option>USD</option></select><button class="btn" id="${id}_btn">🔄 تبدیل</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const v=parseFloat(document.getElementById(`${id}_val`).value); if(!isValidNumber(v)){document.getElementById(`${id}_res`).innerText='⚠️ عدد معتبر وارد کنید';return;} const f=document.getElementById(`${id}_from`).value,t=document.getElementById(`${id}_to`).value; document.getElementById(`${id}_res`).innerText=`${v} ${f} = ${(v*rates[f]/rates[t]).toFixed(2)} ${t}`; };
+      }
+    });
+
+    // ------------------- ریاضیات (۲۰ ابزار) -------------------
+    add({ id:'quadratic', category:'ریاضیات', name:'📈 معادله درجه۲', icon:'📈',
+      desc:'حل معادله درجه دوم به فرم ax²+bx+c=0 و یافتن ریشه‌های حقیقی. این معادله در فیزیک (پرتابه)، اقتصاد (نقطه سربه‌سر) و مهندسی کاربرد فراوان دارد.',
+      usage:'ضرایب a, b, c را وارد کنید. اگر دلتا (b²-4ac) منفی باشد، معادله ریشه حقیقی ندارد (یعنی نمودار محور x را قطع نمی‌کند).',
+      render(c){ const id=uid(); c.innerHTML=`<h2>📈 ax²+bx+c=0</h2><input class="tool-input" id="${id}_a" placeholder="a"><input class="tool-input" id="${id}_b" placeholder="b"><input class="tool-input" id="${id}_c" placeholder="c"><button class="btn" id="${id}_btn">🧮 حل</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const a=+document.getElementById(`${id}_a`).value,b=+document.getElementById(`${id}_b`).value,c=+document.getElementById(`${id}_c`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(a)||!isValidNumber(b)||!isValidNumber(c)){resEl.innerText='⚠️ لطفاً اعداد معتبر وارد کنید';return;} const d=b*b-4*a*c; if(d<0)resEl.innerText='⛔ ریشه حقیقی ندارد (دلتا منفی است)'; else resEl.innerText=`✅ x₁ = ${((-b+Math.sqrt(d))/(2*a)).toFixed(4)}  ,  x₂ = ${((-b-Math.sqrt(d))/(2*a)).toFixed(4)}`; };
+      }
+    });
+    add({ id:'prime', category:'ریاضیات', name:'🔢 عدد اول', icon:'🔢',
+      desc:'بررسی اول بودن یک عدد صحیح. عدد اول فقط بر ۱ و خودش بخش‌پذیر است (مثل ۲, ۳, ۵, ۷, ۱۱). این مفهوم در رمزنگاری (مثلاً RSA) و نظریه اعداد کاربرد اساسی دارد.',
+      usage:'عدد صحیح بزرگتر از ۱ را وارد کنید. اگر عدد بر هیچ عددی جز ۱ و خودش بخش‌پذیر نباشد، اول است.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🔢 عدد اول؟</h2><input class="tool-input" id="${id}_num"><button class="btn" id="${id}_btn">🔍 بررسی</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const n=+document.getElementById(`${id}_num`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(n)||n<2||!Number.isInteger(n)){resEl.innerText='⛔ لطفاً عدد صحیح بزرگتر از ۱ وارد کنید';return;} for(let i=2;i<=Math.sqrt(n);i++)if(n%i===0){resEl.innerText='⛔ عدد اول نیست';return;} resEl.innerText='✅ عدد اول است'; };
+      }
+    });
+    add({ id:'factorial', category:'ریاضیات', name:'❗ فاکتوریل', icon:'!',
+      desc:'محاسبه n! (فاکتوریل) یعنی حاصل‌ضرب اعداد ۱ تا n. در ترکیبیات (شمارش تعداد حالت‌های ممکن)، احتمال و آمار کاربرد دارد. مثلاً ۵! = ۱۲۰ یعنی ۱۲۰ حالت برای چیدن ۵ کتاب در قفسه.',
+      usage:'عدد n را وارد کنید (عدد صحیح نامنفی). n! = ۱×۲×۳×...×n',
+      render(c){ const id=uid(); c.innerHTML=`<h2>❗ n!</h2><input class="tool-input" id="${id}_num"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const n=+document.getElementById(`${id}_num`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(n)||n<0||!Number.isInteger(n)){resEl.innerText='⚠️ عدد صحیح نامنفی وارد کنید';return;} let f=1; for(let i=2;i<=n;i++)f*=i; resEl.innerText=`${n}! = ${f}`; };
+      }
+    });
+    add({ id:'baseconv', category:'ریاضیات', name:'🔢 تبدیل مبنا', icon:'🔢',
+      desc:'تبدیل عدد بین مبناهای ۲ (دودویی) تا ۳۶. کامپیوترها از مبنای ۲ استفاده می‌کنند. مبنای ۱۶ (هگزادسیمال) در برنامه‌نویسی و رنگ‌ها کاربرد دارد.',
+      usage:'عدد، مبنای مبدأ و مبنای مقصد را وارد کنید. مثلاً عدد ۲۵۵ در مبنای ۱۰ معادل FF در مبنای ۱۶ است.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🔢 تبدیل مبنا</h2><input class="tool-input" id="${id}_val" placeholder="عدد"><input class="tool-input" id="${id}_bf" placeholder="از مبنا" value="10"><input class="tool-input" id="${id}_bt" placeholder="به مبنا" value="2"><button class="btn" id="${id}_btn">🔄 تبدیل</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ try{ const val=document.getElementById(`${id}_val`).value.trim(); const bf=parseInt(document.getElementById(`${id}_bf`).value); const bt=parseInt(document.getElementById(`${id}_bt`).value); const resEl=document.getElementById(`${id}_res`); if(isNaN(bf)||isNaN(bt)||bf<2||bf>36||bt<2||bt>36){resEl.innerText='⚠️ مبنا باید بین ۲ و ۳۶ باشد';return;} const num=parseInt(val,bf); if(isNaN(num)){resEl.innerText='⚠️ عدد در مبنای مبدأ نامعتبر است';return;} resEl.innerText=num.toString(bt).toUpperCase(); }catch(e){document.getElementById(`${id}_res`).innerText='⚠️ خطا در تبدیل';} };
+      }
+    });
+    add({ id:'permutation', category:'ریاضیات', name:'🔀 جایگشت', icon:'🔀',
+      desc:'محاسبه جایگشت P(n,r) یعنی تعداد حالت‌های انتخاب و چینش r شیء از n شیء که ترتیب مهم است. مثلاً از ۵ دونده، به چند حالت می‌توان مدال‌های طلا، نقره و برنز را اهدا کرد؟ P(5,3)=60',
+      usage:'n (تعداد کل) و r (تعداد انتخاب) را وارد کنید. باید n≥r≥۰ باشد.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🔀 P(n,r)</h2><input class="tool-input" id="${id}_n" placeholder="n"><input class="tool-input" id="${id}_r" placeholder="r"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const n=+document.getElementById(`${id}_n`).value,r=+document.getElementById(`${id}_r`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(n)||!isValidNumber(r)||n<r||n<0||r<0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید (n≥r≥۰)';return;} let f=1; for(let i=n;i>n-r;i--)f*=i; resEl.innerText=`P(${n},${r}) = ${f}`; };
+      }
+    });
+    add({ id:'combination', category:'ریاضیات', name:'🔗 ترکیب', icon:'🔗',
+      desc:'محاسبه ترکیب C(n,r) یعنی تعداد حالت‌های انتخاب r شیء از n شیء که ترتیب مهم نیست. مثلاً از ۵ نفر، به چند حالت می‌توان یک تیم ۳ نفره انتخاب کرد؟ C(5,3)=10',
+      usage:'n و r را وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🔗 C(n,r)</h2><input class="tool-input" id="${id}_n"><input class="tool-input" id="${id}_r"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const n=+document.getElementById(`${id}_n`).value,r=+document.getElementById(`${id}_r`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(n)||!isValidNumber(r)||n<r||n<0||r<0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;} const fact=x=>{let f=1;for(let i=2;i<=x;i++)f*=i;return f;}; const result=fact(n)/(fact(r)*fact(n-r)); resEl.innerText=`C(${n},${r}) = ${result}`; };
+      }
+    });
+    add({ id:'fibonacci', category:'ریاضیات', name:'🐚 فیبوناچی', icon:'🐚',
+      desc:'محاسبه nامین عدد دنباله فیبوناچی. این دنباله در طبیعت (الگوی مارپیچ گل آفتابگردان، صدف)، معماری و حتی بازارهای مالی کاربرد دارد. F₀=۰, F₁=۱, F₂=۱, F₃=۲, ...',
+      usage:'n را وارد کنید. عدد خروجی nامین عدد فیبوناچی است.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🐚 فیبوناچی</h2><input class="tool-input" id="${id}_n"><button class="btn" id="${id}_btn">✨ تولید</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const n=+document.getElementById(`${id}_n`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(n)||n<0||!Number.isInteger(n)){resEl.innerText='⚠️ عدد صحیح نامنفی وارد کنید';return;} let a=0,b=1; for(let i=2;i<=n;i++)[a,b]=[b,a+b]; resEl.innerText=`F(${n}) = ${n===0?0:b}`; };
+      }
+    });
+    add({ id:'gcd', category:'ریاضیات', name:'🧮 ب.م.م', icon:'🧮',
+      desc:'بزرگترین مقسوم‌علیه مشترک (GCD) دو عدد را پیدا می‌کند. در ساده‌سازی کسرها، ریاضیات و برنامه‌نویسی کاربرد دارد. مثلاً ب.م.م ۱۲ و ۸ برابر ۴ است.',
+      usage:'دو عدد صحیح وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🧮 ب.م.م</h2><input class="tool-input" id="${id}_a" placeholder="a"><input class="tool-input" id="${id}_b" placeholder="b"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ let a=+document.getElementById(`${id}_a`).value,b=+document.getElementById(`${id}_b`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(a)||!isValidNumber(b)){resEl.innerText='⚠️ اعداد معتبر وارد کنید';return;} a=Math.abs(a);b=Math.abs(b); while(b)[a,b]=[b,a%b]; resEl.innerText=`ب.م.م = ${a}`; };
+      }
+    });
+    add({ id:'lcm', category:'ریاضیات', name:'🧮 ک.م.م', icon:'🧮',
+      desc:'کوچکترین مضرب مشترک (LCM) دو عدد را محاسبه می‌کند. در جمع و تفریق کسرها با مخرج‌های مختلف و زمان‌بندی رویدادهای تکراری کاربرد دارد.',
+      usage:'دو عدد صحیح وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🧮 ک.م.م</h2><input class="tool-input" id="${id}_a"><input class="tool-input" id="${id}_b"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ let a=+document.getElementById(`${id}_a`).value,b=+document.getElementById(`${id}_b`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(a)||!isValidNumber(b)){resEl.innerText='⚠️ اعداد معتبر وارد کنید';return;} const gcd=(x,y)=>{while(y)[x,y]=[y,x%y];return x;}; resEl.innerText=`ک.م.م = ${(a*b)/gcd(Math.abs(a),Math.abs(b))}`; };
+      }
+    });
+    add({ id:'scientific', category:'ریاضیات', name:'🧮 ماشین حساب علمی', icon:'🧮',
+      desc:'محاسبات پیشرفته ریاضی شامل sin, cos, tan, sqrt (جذر), log (لگاریتم پایه ۱۰), ln (لگاریتم طبیعی). ورودی‌ها بر حسب رادیان هستند (نه درجه).',
+      usage:'عبارت ریاضی را وارد کنید. مثلاً sin(0.5)*2 یا sqrt(16)+log(100).',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🧮 ماشین حساب علمی</h2><input class="tool-input" id="${id}_expr" placeholder="sin(0.5)*2"><button class="btn" id="${id}_btn">⚡ محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ try{ let expr=document.getElementById(`${id}_expr`).value; expr=expr.replace(/sin/g,'Math.sin').replace(/cos/g,'Math.cos').replace(/tan/g,'Math.tan').replace(/sqrt/g,'Math.sqrt').replace(/log/g,'Math.log10').replace(/ln/g,'Math.log').replace(/pi/g,'Math.PI').replace(/e/g,'Math.E'); const result=eval(expr); document.getElementById(`${id}_res`).innerText=isValidNumber(result)?result:'⚠️ نتیجه نامعتبر'; }catch(e){document.getElementById(`${id}_res`).innerText='⚠️ عبارت نامعتبر';} };
+      }
+    });
+    add({ id:'rootN', category:'ریاضیات', name:'√ ریشه nام', icon:'√',
+      desc:'محاسبه ریشه nام یک عدد. مثلاً ریشه دوم (جذر) ۹ برابر ۳ است. ریشه سوم ۸ برابر ۲ است (چون ۲×۲×۲=۸).',
+      usage:'عدد و n را وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>√ ریشه nام</h2><input class="tool-input" id="${id}_num" placeholder="عدد"><input class="tool-input" id="${id}_n" placeholder="n"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const num=+document.getElementById(`${id}_num`).value,n=+document.getElementById(`${id}_n`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(num)||!isValidNumber(n)||n===0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;} resEl.innerText=Math.pow(num,1/n); };
+      }
+    });
+    add({ id:'logBase', category:'ریاضیات', name:'📊 لگاریتم', icon:'📊',
+      desc:'محاسبه لگاریتم یک عدد در پایه دلخواه. لگاریتم معکوس توان است. مثلاً log₁₀(100)=۲ چون ۱۰²=۱۰۰. در علوم، مهندسی و تحلیل داده کاربرد دارد.',
+      usage:'عدد و پایه لگاریتم را وارد کنید. عدد و پایه باید مثبت و پایه مخالف ۱ باشد.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>📊 لگاریتم</h2><input class="tool-input" id="${id}_num" placeholder="عدد"><input class="tool-input" id="${id}_base" value="10" placeholder="پایه"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const num=+document.getElementById(`${id}_num`).value,base=+document.getElementById(`${id}_base`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(num)||!isValidNumber(base)||base<=0||base===1||num<=0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;} resEl.innerText=Math.log(num)/Math.log(base); };
+      }
+    });
+    add({ id:'percentCalc', category:'ریاضیات', name:'💯 درصد', icon:'%',
+      desc:'محاسبه درصد یک عدد از عدد دیگر. مثلاً ۲۰٪ از ۵۰,۰۰۰ تومان می‌شود ۱۰,۰۰۰ تومان. در خرید (تخفیف)، مالیات و محاسبات مالی روزمره کاربرد دارد.',
+      usage:'عدد کل و درصد مورد نظر را وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>💯 درصد</h2><input class="tool-input" id="${id}_total" placeholder="عدد کل"><input class="tool-input" id="${id}_percent" placeholder="درصد"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const total=+document.getElementById(`${id}_total`).value,p=+document.getElementById(`${id}_percent`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(total)||!isValidNumber(p)){resEl.innerText='⚠️ اعداد معتبر وارد کنید';return;} resEl.innerText=`${p}% از ${total} = ${(total*p/100).toFixed(2)}`; };
+      }
+    });
+    add({ id:'randomRange', category:'ریاضیات', name:'🎲 عدد تصادفی', icon:'🎲',
+      desc:'تولید عدد تصادفی صحیح در یک بازه مشخص. در بازی‌ها، قرعه‌کشی و شبیه‌سازی کاربرد دارد.',
+      usage:'حداقل و حداکثر بازه را وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🎲 عدد تصادفی</h2><input class="tool-input" id="${id}_min" value="1"><input class="tool-input" id="${id}_max" value="100"><button class="btn" id="${id}_btn">🎯 تولید</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ const min=+document.getElementById(`${id}_min`).value,max=+document.getElementById(`${id}_max`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(min)||!isValidNumber(max)||min>max){resEl.innerText='⚠️ بازه معتبر وارد کنید';return;} resEl.innerText=Math.floor(Math.random()*(max-min+1))+min; };
+      }
+    });
+    add({ id:'primeFactors', category:'ریاضیات', name:'🔢 عوامل اول', icon:'🔢',
+      desc:'تجزیه یک عدد به عوامل اول (اعدادی که با ضرب آن‌ها عدد اصلی ساخته می‌شود). مثلاً ۱۲ = ۲×۲×۳. در ریاضیات و رمزنگاری کاربرد دارد.',
+      usage:'عدد صحیح بزرگتر از ۱ وارد کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🔢 عوامل اول</h2><input class="tool-input" id="${id}_num"><button class="btn" id="${id}_btn">🧮 تجزیه</button><div class="result" id="${id}_res"></div>`;
+        document.getElementById(`${id}_btn`).onclick=()=>{ let n=+document.getElementById(`${id}_num`).value; const resEl=document.getElementById(`${id}_res`); if(!isValidNumber(n)||n<2||!Number.isInteger(n)){resEl.innerText='⚠️ عدد صحیح بزرگتر از ۱ وارد کنید';return;} const factors=[]; for(let i=2;i<=n;i++)while(n%i===0){factors.push(i);n/=i;} resEl.innerText=factors.join(' × '); };
+      }
+    });
+    // ------------------- امنیت (۱۰ ابزار) -------------------
+add({ id:'sha256', category:'امنیت', name:'🔐 SHA256', icon:'🔐',
+  desc:'تولید هش امن SHA-256 از متن ورودی. این الگوریتم یک طرفه است یعنی از هش نمی‌توان به متن اصلی رسید. در بلاک‌چین (بیت‌کوین)، امضای دیجیتال و ذخیره امن رمز عبور کاربرد دارد.',
+  usage:'متن دلخواه را وارد کرده و دکمه هش را بزنید. خروجی یک رشته ۶۴ کاراکتری هگزادسیمال است که اثر انگشت دیجیتال متن شما محسوب می‌شود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔐 SHA256</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_btn">🔒 هش</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText=sha256(document.getElementById(`${id}_txt`).value);}; }
+});
+add({ id:'md5', category:'امنیت', name:'🔐 MD5', icon:'🔐',
+  desc:'تولید هش MD5 از متن ورودی. MD5 قدیمی‌تر از SHA256 است و امروزه برای کاربردهای امنیتی توصیه نمی‌شود، اما برای بررسی سریع یکپارچگی فایل (checksum) همچنان استفاده می‌شود.',
+  usage:'متن را وارد کرده و دکمه هش را بزنید. خروجی یک رشته ۳۲ کاراکتری هگز است.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔐 MD5</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_btn">🔒 هش</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText=md5(document.getElementById(`${id}_txt`).value);}; }
+});
+add({ id:'passwordGen', category:'امنیت', name:'🔑 تولید رمز', icon:'🔑',
+  desc:'ایجاد رمز عبور تصادفی و قوی شامل حروف بزرگ و کوچک، اعداد و نمادها. رمز قوی باید حداقل ۱۲ کاراکتر باشد و ترکیبی از انواع کاراکترها را داشته باشد.',
+  usage:'طول رمز را انتخاب کنید (بین ۴ تا ۱۲۸). هرچه طول بیشتر، رمز قوی‌تر.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔑 رمز تصادفی</h2><input class="tool-input" id="${id}_len" value="16" type="number"><button class="btn" id="${id}_btn">🎲 تولید</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const len=+document.getElementById(`${id}_len`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(len)||len<4||len>128){resEl.innerText='⚠️ طول بین ۴ و ۱۲۸ انتخاب کنید';return;}const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';let p='';for(let i=0;i<len;i++)p+=chars[Math.floor(Math.random()*chars.length)];resEl.innerText=p;}; }
+});
+add({ id:'base64', category:'امنیت', name:'🔏 Base64', icon:'🔏',
+  desc:'کدگذاری و کدگشایی Base64. این روش برای تبدیل داده‌های باینری (مثل تصاویر) به متن قابل انتقال در ایمیل و URL استفاده می‌شود. امنیت ندارد و صرفاً یک کدگذاری است.',
+  usage:'متن را وارد کرده و Encode یا Decode را بزنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔏 Base64</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_enc">📝 Encode</button><button class="btn" id="${id}_dec">🔓 Decode</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_enc`).onclick=()=>{document.getElementById(`${id}_res`).innerText=btoa(document.getElementById(`${id}_txt`).value);}; document.getElementById(`${id}_dec`).onclick=()=>{try{document.getElementById(`${id}_res`).innerText=atob(document.getElementById(`${id}_txt`).value);}catch(e){document.getElementById(`${id}_res`).innerText='⛔ متن نامعتبر';}}; }
+});
+add({ id:'urlEncode', category:'امنیت', name:'🔗 URL Encode', icon:'🔗',
+  desc:'کدگذاری و کدگشایی URL. کاراکترهای خاص مثل فاصله، @، # و کاراکترهای فارسی در URL باید کدگذاری شوند تا مرورگر بتواند آن‌ها را درست تفسیر کند.',
+  usage:'متن یا URL را وارد کنید. Encode کاراکترها را به %xx تبدیل می‌کند، Decode برعکس.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔗 URL</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_enc">📝 Encode</button><button class="btn" id="${id}_dec">🔓 Decode</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_enc`).onclick=()=>{document.getElementById(`${id}_res`).innerText=encodeURIComponent(document.getElementById(`${id}_txt`).value);}; document.getElementById(`${id}_dec`).onclick=()=>{document.getElementById(`${id}_res`).innerText=decodeURIComponent(document.getElementById(`${id}_txt`).value);}; }
+});
+add({ id:'guidGen', category:'امنیت', name:'🆔 GUID', icon:'🆔',
+  desc:'تولید شناسه یکتای جهانی (GUID/UUID). این شناسه‌ها برای نام‌گذاری یکتای فایل‌ها، رکوردهای پایگاه داده، شناسه کاربران و... استفاده می‌شوند. احتمال تکراری بودن دو GUID تقریباً صفر است.',
+  usage:'دکمه تولید را بزنید. هر بار یک شناسه ۳۶ کاراکتری منحصربه‌فرد تولید می‌شود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🆔 GUID</h2><button class="btn" id="${id}_btn">🎲 تولید</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});}; }
+});
+add({ id:'passwordStrength', category:'امنیت', name:'💪 قدرت رمز', icon:'💪',
+  desc:'بررسی قدرت رمز عبور بر اساس طول و تنوع کاراکترها (حروف بزرگ، کوچک، اعداد و نمادها). رمز قوی حداقل ۱۲ کاراکتر و ترکیبی از همه انواع است.',
+  usage:'رمز خود را تایپ کنید تا سطح امنیت آن به صورت زنده نمایش داده شود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>💪 قدرت رمز</h2><input class="tool-input" id="${id}_pwd" type="text"><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_pwd`).oninput=function(){const v=this.value;let s=0;if(v.length>8)s++;if(v.length>12)s++;if(/[A-Z]/.test(v))s++;if(/[a-z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;const levels=['⛔ بسیار ضعیف','⚠️ ضعیف','🔶 متوسط','✅ خوب','💪 قوی','🛡️ بسیار قوی'];document.getElementById(`${id}_res`).innerText=levels[Math.min(s,5)];}; }
+});
+add({ id:'morse', category:'امنیت', name:'📡 کد مورس', icon:'📡',
+  desc:'تبدیل متن انگلیسی به کد مورس (مجموعه‌ای از نقطه و خط). در ارتباطات رادیویی، تلگراف و شرایط اضطراری (SOS = ...---...) کاربرد تاریخی و عملی دارد.',
+  usage:'متن انگلیسی وارد کنید. حروف به نقطه (dit) و خط (dah) تبدیل می‌شوند.',
+  render(c){ const morse={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',' ':'/'}; const id=uid(); c.innerHTML=`<h2>📡 مورس</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_btn">🔁 به مورس</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText=document.getElementById(`${id}_txt`).value.toUpperCase().split('').map(ch=>morse[ch]||ch).join(' ');}; }
+});
+add({ id:'morseDecoder', category:'امنیت', name:'📡 مورس به متن', icon:'📡',
+  desc:'تبدیل کد مورس به متن انگلیسی. برعکس ابزار قبلی عمل می‌کند.',
+  usage:'کد مورس را با فاصله بین حروف و / بین کلمات وارد کنید.',
+  render(c){ const morseRev={};(()=>{const m={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'};Object.keys(m).forEach(k=>morseRev[m[k]]=k);})(); const id=uid(); c.innerHTML=`<h2>📡 مورس به متن</h2><textarea class="tool-textarea" id="${id}_txt" placeholder=".... . .-.. .-.. --- / .-- --- .-. .-.. -.."></textarea><button class="btn" id="${id}_btn">🔁 به متن</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText=document.getElementById(`${id}_txt`).value.split(' ').map(ch=>morseRev[ch]||(ch==='/'?' ':ch)).join('');}; }
+});
+
+// ------------------- توسعه‌دهندگان (۱۶ ابزار) -------------------
+add({ id:'jsonFmt', category:'توسعه‌دهندگان', name:'📋 فرمت JSON', icon:'📋',
+  desc:'زیباسازی و مرتب‌سازی JSON (JavaScript Object Notation) که فرمت استاندارد تبادل داده در وب و APIهاست. JSON نامرتب خوانایی ندارد و این ابزار آن را منظم می‌کند.',
+  usage:'متن JSON خام را وارد کنید و دکمه زیباسازی را بزنید. خروجی با تورفتگی و مرتب نمایش داده می‌شود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📋 JSON</h2><textarea class="tool-textarea" id="${id}_json"></textarea><button class="btn" id="${id}_btn">✨ زیباسازی</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{try{document.getElementById(`${id}_res`).innerText=JSON.stringify(JSON.parse(document.getElementById(`${id}_json`).value),null,2);}catch(e){document.getElementById(`${id}_res`).innerText='⛔ JSON نامعتبر';}}; }
+});
+add({ id:'regexTest', category:'توسعه‌دهندگان', name:'🔍 تست Regex', icon:'🔍',
+  desc:'آزمون عبارت باقاعده (Regular Expression) روی متن. Regex برای جستجو، اعتبارسنجی (مثل ایمیل، شماره تلفن) و استخراج الگو از متن استفاده می‌شود.',
+  usage:'الگوی regex (مثلاً \\d+ برای اعداد)، flags (مثلاً g برای همه موارد) و متن را وارد کنید. موارد مطابق‌شده هایلایت می‌شوند.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔍 Regex</h2><input class="tool-input" id="${id}_pat" placeholder="الگو"><input class="tool-input" id="${id}_flags" placeholder="flags" value="g"><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_btn">🔎 تست</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{try{const r=new RegExp(document.getElementById(`${id}_pat`).value,document.getElementById(`${id}_flags`).value);const m=document.getElementById(`${id}_txt`).value.match(r);document.getElementById(`${id}_res`).innerHTML=m?m.map(x=>`<mark>${escapeHtml(x)}</mark>`).join(' '):'🔹 مطابقت ندارد';}catch(e){document.getElementById(`${id}_res`).innerText='⛔ الگو نامعتبر';}}; }
+});
+add({ id:'diff', category:'توسعه‌دهندگان', name:'📊 مقایسه متن', icon:'📊',
+  desc:'نمایش تفاوت دو متن خط به خط. این ابزار شبیه git diff عمل می‌کند. خطوط حذف‌شده با رنگ قرمز و خطوط اضافه‌شده با رنگ سبز نمایش داده می‌شوند.',
+  usage:'دو متن را در کادرهای جداگانه وارد کنید و دکمه مقایسه را بزنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📊 مقایسه</h2><textarea class="tool-textarea" id="${id}_t1" placeholder="متن اول"></textarea><textarea class="tool-textarea" id="${id}_t2" placeholder="متن دوم"></textarea><button class="btn" id="${id}_btn">🔍 مقایسه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const a=document.getElementById(`${id}_t1`).value.split('\n'),b=document.getElementById(`${id}_t2`).value.split('\n');let out='';for(let i=0;i<Math.max(a.length,b.length);i++){if(a[i]!==b[i])out+=`<span style="color:#f55">-${escapeHtml(a[i]||'')}</span>\n<span style="color:#5f5">+${escapeHtml(b[i]||'')}</span>\n`;}document.getElementById(`${id}_res`).innerHTML=out||'✅ متن‌ها یکسان هستند';}; }
+});
+add({ id:'csv2json', category:'توسعه‌دهندگان', name:'📄 CSV به JSON', icon:'📄',
+  desc:'تبدیل داده CSV (مقادیر جداشده با کاما، خروجی اکسل) به فرمت JSON. در برنامه‌نویسی و تحلیل داده بسیار پرکاربرد است.',
+  usage:'متن CSV را وارد کنید (خط اول هدرها). خروجی JSON قابل استفاده در کدنویسی خواهد بود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📄 CSV → JSON</h2><textarea class="tool-textarea" id="${id}_csv"></textarea><button class="btn" id="${id}_btn">🔄 تبدیل</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{try{const lines=document.getElementById(`${id}_csv`).value.trim().split('\n');const headers=lines[0].split(',');const result=lines.slice(1).map(l=>{const vals=l.split(',');const obj={};headers.forEach((h,i)=>obj[h.trim()]=vals[i]?vals[i].trim():'');return obj;});document.getElementById(`${id}_res`).innerText=JSON.stringify(result,null,2);}catch(e){document.getElementById(`${id}_res`).innerText='⛔ خطا در تبدیل';}}; }
+});
+add({ id:'unixTime', category:'توسعه‌دهندگان', name:'🕒 زمان یونیکس', icon:'🕒',
+  desc:'تبدیل timestamp یونیکس (ثانیه از ۱ ژانویه ۱۹۷۰) به تاریخ شمسی و بالعکس. در برنامه‌نویسی، پایگاه داده و APIها زمان به این صورت ذخیره می‌شود.',
+  usage:'timestamp (عدد ۱۰ رقمی) را وارد کنید یا دکمه «الان» را بزنید تا timestamp فعلی را ببینید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🕒 Unix Time</h2><input class="tool-input" id="${id}_ts" placeholder="timestamp"><button class="btn" id="${id}_conv">📅 به تاریخ</button><button class="btn" id="${id}_now">🕐 الان</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_conv`).onclick=()=>{const ts=+document.getElementById(`${id}_ts`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(ts)){resEl.innerText='⚠️ timestamp معتبر وارد کنید';return;}resEl.innerText=new Date(ts*1000).toLocaleString('fa-IR');};document.getElementById(`${id}_now`).onclick=()=>{document.getElementById(`${id}_res`).innerText=Math.floor(Date.now()/1000);}; }
+});
+add({ id:'qrcode', category:'توسعه‌دهندگان', name:'🔳 QR Code', icon:'🔳',
+  desc:'تولید QR Code (Quick Response Code) از متن یا لینک. می‌توانید آن را اسکن کنید تا به سرعت اطلاعات را منتقل کنید. در پرداخت، لینک‌دهی و اشتراک‌گذاری کاربرد دارد.',
+  usage:'متن یا URL را وارد کنید و دکمه تولید را بزنید. می‌توانید از QR ذخیره عکس بگیرید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔳 QR Code</h2><input class="tool-input" id="${id}_txt"><button class="btn" id="${id}_btn">✨ تولید</button><div id="${id}_qr"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_qr`).innerHTML='';new QRCode(document.getElementById(`${id}_qr`),{text:document.getElementById(`${id}_txt`).value,width:200,height:200});}; }
+});
+add({ id:'htmlEntities', category:'توسعه‌دهندگان', name:'💻 HTML Entities', icon:'💻',
+  desc:'کدگذاری و کدگشایی کاراکترهای خاص HTML. مثلاً < به &lt; تبدیل می‌شود تا مرورگر آن را به عنوان تگ تفسیر نکند. برای نمایش کد در صفحات وب ضروری است.',
+  usage:'متن HTML را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>💻 HTML Entities</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><button class="btn" id="${id}_enc">📝 Encode</button><button class="btn" id="${id}_dec">🔓 Decode</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_enc`).onclick=()=>{document.getElementById(`${id}_res`).innerText=document.getElementById(`${id}_txt`).value.replace(/[\u00A0-\u9999<>\&]/g,i=>'&#'+i.charCodeAt(0)+';');};document.getElementById(`${id}_dec`).onclick=()=>{const t=document.createElement('textarea');t.innerHTML=document.getElementById(`${id}_txt`).value;document.getElementById(`${id}_res`).innerText=t.value;}; }
+});
+add({ id:'colorPicker', category:'توسعه‌دهندگان', name:'🎨 انتخاب رنگ', icon:'🎨',
+  desc:'انتخاب رنگ و دریافت کدهای HEX (برای CSS/HTML)، RGB (نمایشگرها) و HSL (تنظیم روشنایی و اشباع). در طراحی وب، گرافیک و UI کاربرد دارد.',
+  usage:'با کلیک روی مستطیل رنگی، رنگ مورد نظر را انتخاب کنید. کدها به صورت زنده به‌روز می‌شوند.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🎨 رنگ</h2><input type="color" id="${id}_color" value="#00d4aa" style="width:100%;height:60px"><div class="result" id="${id}_res"></div>`; function update(){const hex=document.getElementById(`${id}_color`).value;const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);document.getElementById(`${id}_res`).innerText=`HEX: ${hex}\nRGB: (${r}, ${g}, ${b})\nHSL: (${Math.round(r/2.55)}, ${Math.round(g/2.55)}%, ${Math.round(b/2.55)}%)`;} document.getElementById(`${id}_color`).oninput=update; update(); }
+});
+add({ id:'wordCount', category:'توسعه‌دهندگان', name:'📝 واژه‌شمار', icon:'📝',
+  desc:'شمارش کلمات، کاراکترها (با احتساب فاصله)، تعداد جملات و تخمین زمان مطالعه (بر اساس ۲۰۰ کلمه در دقیقه). برای نویسندگان، مترجمان و محتوانویسان کاربرد دارد.',
+  usage:'متن خود را تایپ یا جای‌گذاری کنید. آمار به صورت زنده به‌روز می‌شود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📝 واژه‌شمار</h2><textarea class="tool-textarea" id="${id}_txt"></textarea><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_txt`).oninput=function(){const t=this.value.trim();const words=t?t.split(/\s+/).length:0;const chars=t.length;const sentences=t?t.split(/[.!?]+/).length:0;document.getElementById(`${id}_res`).innerText=`کلمات: ${words} | کاراکتر: ${chars} | جملات: ${sentences} | زمان مطالعه: ~${Math.ceil(words/200)} دقیقه`;}; }
+});
+add({ id:'loremGen', category:'توسعه‌دهندگان', name:'📄 متن Lorem', icon:'📄',
+  desc:'تولید متن ساختگی (Lorem Ipsum فارسی) برای پر کردن فضای طراحی وب، تست فونت و layout. طراحان UI/UX از این متن‌ها استفاده می‌کنند تا طرح را قبل از محتوای واقعی ببینند.',
+  usage:'تعداد پاراگراف را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📄 Lorem Ipsum</h2><input class="tool-input" id="${id}_n" value="1" type="number"><button class="btn" id="${id}_btn">✨ تولید</button><div class="result" id="${id}_res"></div>`; const text='لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. '; document.getElementById(`${id}_btn`).onclick=()=>{const n=+document.getElementById(`${id}_n`).value;document.getElementById(`${id}_res`).innerText=text.repeat(Math.max(1,n));}; }
+});
+add({ id:'urlParser', category:'توسعه‌دهندگان', name:'🔍 تجزیه URL', icon:'🔍',
+  desc:'تجزیه یک URL به اجزای سازنده: پروتکل (https)، دامنه، پورت، مسیر، پارامترهای query و hash.',
+  usage:'URL کامل را وارد کنید تا اجزای آن تحلیل شود.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔍 تجزیه URL</h2><input class="tool-input" id="${id}_url" placeholder="https://example.com:8080/path?q=1#top"><button class="btn" id="${id}_btn">🔍 تجزیه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{try{const u=new URL(document.getElementById(`${id}_url`).value);document.getElementById(`${id}_res`).innerText=`پروتکل: ${u.protocol}\nدامنه: ${u.hostname}\nپورت: ${u.port||'پیش‌فرض'}\nمسیر: ${u.pathname}\nپارامترها: ${u.search||'ندارد'}\nHash: ${u.hash||'ندارد'}`;}catch(e){document.getElementById(`${id}_res`).innerText='⚠️ URL نامعتبر';}}; }
+});
+add({ id:'emojiConverter', category:'توسعه‌دهندگان', name:'😀 ایموجی به یونیکد', icon:'😀',
+  desc:'تبدیل ایموجی به کد یونیکد (code point) و بالعکس. برای برنامه‌نویسانی که با متن و ایموجی کار می‌کنند مفید است.',
+  usage:'ایموجی یا کد یونیکد (مثلاً U+1F600) را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>😀 ایموجی</h2><input class="tool-input" id="${id}_txt" placeholder="😀 یا U+1F600"><button class="btn" id="${id}_enc">به کد</button><button class="btn" id="${id}_dec">به ایموجی</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_enc`).onclick=()=>{const t=document.getElementById(`${id}_txt`).value;let o='';for(const ch of t){const cp=ch.codePointAt(0);o+=cp>127?`U+${cp.toString(16).toUpperCase()} `:ch;}document.getElementById(`${id}_res`).innerText=o;};document.getElementById(`${id}_dec`).onclick=()=>{const t=document.getElementById(`${id}_txt`).value;const r=t.replace(/U\+([0-9A-Fa-f]+)/g,(_,cp)=>String.fromCodePoint(parseInt(cp,16)));document.getElementById(`${id}_res`).innerText=r;}; }
+});
+
+// ------------------- سلامت (۷ ابزار) -------------------
+add({ id:'bmi', category:'سلامت', name:'⚖️ BMI', icon:'⚖️',
+  desc:'شاخص توده بدنی (Body Mass Index) نشان می‌دهد آیا وزن شما نسبت به قدتان در محدوده سالم است یا خیر. این شاخص توسط سازمان بهداشت جهانی تعریف شده و برای بزرگسالان کاربرد دارد (برای کودکان و ورزشکاران حرفه‌ای دقیق نیست).',
+  usage:'وزن (kg) و قد (cm) را وارد کنید. کمتر از ۱۸.۵ = کمبود وزن، ۱۸.۵ تا ۲۴.۹ = نرمال، ۲۵ تا ۲۹.۹ = اضافه وزن، ۳۰ به بالا = چاقی.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>⚖️ BMI</h2><input class="tool-input" id="${id}_w" placeholder="وزن (kg)"><input class="tool-input" id="${id}_h" placeholder="قد (cm)"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const w=+document.getElementById(`${id}_w`).value,h=+document.getElementById(`${id}_h`).value/100;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(w)||!isValidNumber(h)||h===0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}const bmi=w/(h*h);let cat='';let color='';if(bmi<18.5){cat='کمبود وزن';color='#ff0';}else if(bmi<25){cat='نرمال';color='#0f0';}else if(bmi<30){cat='اضافه وزن';color='#f80';}else{cat='چاقی';color='#f00';}resEl.innerHTML=`<span style="color:${color}">BMI: ${bmi.toFixed(1)} - ${cat}</span>`;}; }
+});
+add({ id:'bmr', category:'سلامت', name:'🔥 BMR', icon:'🔥',
+  desc:'نرخ متابولیسم پایه (Basal Metabolic Rate) یعنی حداقل کالری موردنیاز بدن در حالت استراحت کامل برای زنده ماندن (تنفس، ضربان قلب، دمای بدن). کالری نگهداری با ضرب در ۱.۵۵ (فعالیت متوسط) محاسبه می‌شود.',
+  usage:'سن، وزن (kg)، قد (cm) و جنسیت را وارد کنید. عدد BMR کالری پایه شماست.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🔥 BMR</h2><input class="tool-input" id="${id}_age" placeholder="سن"><input class="tool-input" id="${id}_w" placeholder="وزن (kg)"><input class="tool-input" id="${id}_h" placeholder="قد (cm)"><select class="tool-select" id="${id}_gen"><option value="m">مرد</option><option value="f">زن</option></select><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const a=+document.getElementById(`${id}_age`).value,w=+document.getElementById(`${id}_w`).value,h=+document.getElementById(`${id}_h`).value,gen=document.getElementById(`${id}_gen`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(a)||!isValidNumber(w)||!isValidNumber(h)){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}const bmr=gen==='m'?88.362+13.397*w+4.799*h-5.677*a:447.593+9.247*w+3.098*h-4.330*a;resEl.innerText=`BMR: ${bmr.toFixed(0)} کالری | کالری نگهداری: ${(bmr*1.55).toFixed(0)}`;}; }
+});
+add({ id:'idealWeight', category:'سلامت', name:'🏆 وزن ایده‌آل', icon:'🏆',
+  desc:'محدوده وزن سالم بر اساس شاخص BMI (۱۸.۵ تا ۲۴.۹). این بازه وزنی است که کمترین خطر بیماری‌های مرتبط با وزن را دارد.',
+  usage:'قد خود را به سانتی‌متر وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🏆 وزن ایده‌آل</h2><input class="tool-input" id="${id}_h" placeholder="قد (cm)"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const h=+document.getElementById(`${id}_h`).value/100;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(h)||h===0){resEl.innerText='⚠️ قد معتبر وارد کنید';return;}resEl.innerText=`وزن سالم: ${(18.5*h*h).toFixed(1)} - ${(24.9*h*h).toFixed(1)} kg`;}; }
+});
+add({ id:'bodyFat', category:'سلامت', name:'🏋️ چربی بدن', icon:'🏋️',
+  desc:'تخمین درصد چربی بدن با فرمول نیروی دریایی آمریکا (US Navy Method). این فرمول از اندازه دور کمر، گردن، قد و جنسیت استفاده می‌کند.',
+  usage:'وزن (kg)، قد (cm)، دور کمر (cm) و جنسیت را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🏋️ چربی بدن</h2><input class="tool-input" id="${id}_w" placeholder="وزن (kg)"><input class="tool-input" id="${id}_h" placeholder="قد (cm)"><input class="tool-input" id="${id}_waist" placeholder="دور کمر (cm)"><select class="tool-select" id="${id}_gen"><option value="m">مرد</option><option value="f">زن</option></select><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const w=+document.getElementById(`${id}_w`).value,h=+document.getElementById(`${id}_h`).value,waist=+document.getElementById(`${id}_waist`).value,gen=document.getElementById(`${id}_gen`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(w)||!isValidNumber(h)||!isValidNumber(waist)){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}let bf=gen==='m'?495/(1.0324-0.19077*Math.log10(waist-h*0.4)+0.15456*Math.log10(h))-450:495/(1.29579-0.35004*Math.log10(waist+h*0.4)+0.22100*Math.log10(h))-450;resEl.innerText=`چربی بدن: ${bf.toFixed(1)}%`;}; }
+});
+add({ id:'waterReminder', category:'سلامت', name:'💧 یادآور آب', icon:'💧',
+  desc:'محاسبه میزان آب مورد نیاز روزانه بر اساس وزن بدن (۳۳ میلی‌لیتر به ازای هر کیلوگرم). هیدراته ماندن برای عملکرد مغز، پوست و کلیه‌ها ضروری است.',
+  usage:'وزن خود را به کیلوگرم وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>💧 مصرف آب</h2><input class="tool-input" id="${id}_w" placeholder="وزن (kg)"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const w=+document.getElementById(`${id}_w`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(w)){resEl.innerText='⚠️ وزن معتبر وارد کنید';return;}resEl.innerText=`توصیه: ${(w*0.033).toFixed(1)} لیتر آب در روز`;}; }
+});
+add({ id:'ageCalc', category:'سلامت', name:'📅 محاسبه سن', icon:'📅',
+  desc:'محاسبه سن دقیق به سال، ماه و روز. این ابزار فاصله زمانی بین تاریخ تولد و امروز را با دقت محاسبه می‌کند.',
+  usage:'تاریخ تولد خود را انتخاب کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📅 سن</h2><input type="date" class="tool-input" id="${id}_birth"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const birth=new Date(document.getElementById(`${id}_birth`).value);const now=new Date();const resEl=document.getElementById(`${id}_res`);if(isNaN(birth.getTime())){resEl.innerText='⚠️ تاریخ معتبر انتخاب کنید';return;}let y=now.getFullYear()-birth.getFullYear(),m=now.getMonth()-birth.getMonth(),d=now.getDate()-birth.getDate();if(d<0){m--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate();}if(m<0){y--;m+=12;}resEl.innerText=`${y} سال، ${m} ماه، ${d} روز`;}; }
+});
+add({ id:'dueDate', category:'سلامت', name:'🤰 تاریخ زایمان', icon:'🤰',
+  desc:'محاسبه تاریخ تقریبی زایمان بر اساس اولین روز آخرین قاعدگی (LMP). بارداری طبیعی حدود ۴۰ هفته (۲۸۰ روز) طول می‌کشد.',
+  usage:'اولین روز آخرین قاعدگی را انتخاب کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🤰 تاریخ زایمان</h2><input type="date" class="tool-input" id="${id}_lmp"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const lmp=new Date(document.getElementById(`${id}_lmp`).value);const resEl=document.getElementById(`${id}_res`);if(isNaN(lmp.getTime())){resEl.innerText='⚠️ تاریخ معتبر انتخاب کنید';return;}const due=new Date(lmp);due.setDate(due.getDate()+280);resEl.innerText=`تاریخ تقریبی زایمان: ${due.toLocaleDateString('fa-IR')}`;}; }
+});
+
+// ------------------- مالی (۵ ابزار) -------------------
+add({ id:'loan', category:'مالی', name:'🏦 اقساط وام', icon:'🏦',
+  desc:'محاسبه اقساط ماهانه وام با روش اقساط مساوی (amortization). این روش در وام‌های بانکی رایج است و هر قسط شامل بخشی از اصل و سود می‌باشد.',
+  usage:'مبلغ وام، نرخ سود سالانه (%) و مدت بازپرداخت (ماه) را وارد کنید. خروجی شامل قسط ماهانه، کل بازپرداخت و سود کل است.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🏦 وام</h2><input class="tool-input" id="${id}_P" placeholder="مبلغ وام"><input class="tool-input" id="${id}_r" placeholder="نرخ سالانه (%)"><input class="tool-input" id="${id}_n" placeholder="مدت (ماه)"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const P=+document.getElementById(`${id}_P`).value,r=+document.getElementById(`${id}_r`).value/1200,n=+document.getElementById(`${id}_n`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(P)||!isValidNumber(r)||!isValidNumber(n)||n===0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}const emi=P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);resEl.innerText=`قسط ماهانه: ${emi.toFixed(0)} ریال\nکل بازپرداخت: ${(emi*n).toFixed(0)} ریال\nسود کل: ${(emi*n-P).toFixed(0)} ریال`;}; }
+});
+add({ id:'compound', category:'مالی', name:'📈 سود مرکب', icon:'📈',
+  desc:'محاسبه رشد سرمایه با سود مرکب. سود مرکب یعنی سودی که به اصل اضافه می‌شود و خودش هم سود تولید می‌کند. اینشتین آن را «عجایب هشتم جهان» نامید.',
+  usage:'اصل سرمایه، نرخ سود سالانه (%) و مدت (سال) را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>📈 سود مرکب</h2><input class="tool-input" id="${id}_P" placeholder="اصل سرمایه"><input class="tool-input" id="${id}_r" placeholder="نرخ سالانه (%)"><input class="tool-input" id="${id}_t" placeholder="مدت (سال)"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const P=+document.getElementById(`${id}_P`).value,r=+document.getElementById(`${id}_r`).value/100,t=+document.getElementById(`${id}_t`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(P)||!isValidNumber(r)||!isValidNumber(t)){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}resEl.innerText=`ارزش آتی: ${(P*Math.pow(1+r,t)).toFixed(2)} ریال\nسود کسب‌شده: ${(P*Math.pow(1+r,t)-P).toFixed(2)} ریال`;}; }
+});
+add({ id:'tip', category:'مالی', name:'💸 انعام', icon:'💸',
+  desc:'محاسبه میزان انعام رستوران و مبلغ قابل پرداخت. در بسیاری از کشورها ۱۰-۲۰٪ انعام مرسوم است.',
+  usage:'مبلغ صورتحساب و درصد انعام را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>💸 انعام</h2><input class="tool-input" id="${id}_bill" placeholder="مبلغ صورتحساب"><input class="tool-input" id="${id}_tip" value="10" placeholder="درصد انعام"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const bill=+document.getElementById(`${id}_bill`).value,tip=+document.getElementById(`${id}_tip`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(bill)||!isValidNumber(tip)){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}resEl.innerText=`انعام: ${(bill*tip/100).toFixed(2)}\nقابل پرداخت: ${(bill+bill*tip/100).toFixed(2)}`;}; }
+});
+add({ id:'discount', category:'مالی', name:'🏷️ تخفیف', icon:'🏷️',
+  desc:'محاسبه قیمت نهایی پس از اعمال تخفیف. در خریدهای روزمره و فروشگاه‌ها بسیار کاربرد دارد.',
+  usage:'قیمت اصلی و درصد تخفیف را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🏷️ تخفیف</h2><input class="tool-input" id="${id}_price" placeholder="قیمت اصلی"><input class="tool-input" id="${id}_disc" placeholder="درصد تخفیف"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const price=+document.getElementById(`${id}_price`).value,disc=+document.getElementById(`${id}_disc`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(price)||!isValidNumber(disc)){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}resEl.innerText=`قیمت نهایی: ${(price*(1-disc/100)).toFixed(2)}\nمبلغ تخفیف: ${(price*disc/100).toFixed(2)}`;}; }
+});
+add({ id:'splitBill', category:'مالی', name:'🧾 تقسیم هزینه', icon:'🧾',
+  desc:'تقسیم مساوی مبلغ بین چند نفر. برای حساب کردن سهم هر نفر در رستوران، سفر و هزینه‌های گروهی عالی است.',
+  usage:'مبلغ کل و تعداد نفرات را وارد کنید.',
+  render(c){ const id=uid(); c.innerHTML=`<h2>🧾 تقسیم</h2><input class="tool-input" id="${id}_total" placeholder="مبلغ کل"><input class="tool-input" id="${id}_people" placeholder="تعداد نفرات"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const total=+document.getElementById(`${id}_total`).value,ppl=+document.getElementById(`${id}_people`).value;const resEl=document.getElementById(`${id}_res`);if(!isValidNumber(total)||!isValidNumber(ppl)||ppl===0){resEl.innerText='⚠️ مقادیر معتبر وارد کنید';return;}resEl.innerText=`سهم هر نفر: ${(total/ppl).toFixed(2)}`;}; }
+});
+    // ------------------- تصادفی و سرگرمی (۶ ابزار) -------------------
+    add({ id:'coin3d', category:'تصادفی و سرگرمی', name:'🪙 سکه سه‌بعدی', icon:'🪙',
+      desc:'شبیه‌سازی پرتاب سکه با انیمیشن سه‌بعدی واقع‌گرایانه. نتیجه کاملاً تصادفی است (۵۰٪ شیر، ۵۰٪ خط). در تصمیم‌گیری‌های دودویی و بازی‌ها کاربرد دارد.',
+      usage:'دکمه پرتاب را بزنید. سکه چندین دور کامل می‌چرخد و روی شیر یا خط متوقف می‌شود.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🪙 سکه</h2><div class="coin-scene"><div class="coin" id="${id}_coin"><div class="side front">🦁 شیر</div><div class="side back">✍️ خط</div></div></div><button class="btn" id="${id}_btn">🎯 پرتاب</button><div class="result" id="${id}_res"></div>`; let flipping=false; document.getElementById(`${id}_btn`).onclick=()=>{if(flipping)return;flipping=true;const coin=document.getElementById(`${id}_coin`);const spins=Math.floor(Math.random()*5)+5;const final=(spins*360)+(Math.random()<0.5?0:180);coin.style.transform=`rotateY(${final}deg) rotateX(${spins*360}deg)`;setTimeout(()=>{document.getElementById(`${id}_res`).innerText=final%360===0?'🦁 شیر':'✍️ خط';coin.style.transition='none';coin.style.transform=`rotateY(${final%360}deg)`;flipping=false;},2000);}; }
+    });
+    add({ id:'dice3d', category:'تصادفی و سرگرمی', name:'🎲 تاس سه‌بعدی', icon:'🎲',
+      desc:'شبیه‌سازی پرتاب تاس با مکعب سه‌بعدی. هر وجه تاس از ۱ تا ۶ شماره‌گذاری شده و نتیجه کاملاً تصادفی است.',
+      usage:'دکمه پرتاب را بزنید. مکعب به صورت تصادفی روی یکی از ۶ وجه می‌ایستد.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🎲 تاس</h2><div class="dice-scene"><div class="dice-cube" id="${id}_cube"><div class="face front">4</div><div class="face back">3</div><div class="face right">5</div><div class="face left">2</div><div class="face top">1</div><div class="face bottom">6</div></div></div><button class="btn" id="${id}_btn">🎯 پرتاب</button>`; const rotations=[{x:0,y:0},{x:0,y:180},{x:0,y:-90},{x:0,y:90},{x:-90,y:0},{x:90,y:0}]; document.getElementById(`${id}_btn`).onclick=()=>{const r=rotations[Math.floor(Math.random()*6)];document.getElementById(`${id}_cube`).style.transform=`rotateX(${r.x}deg) rotateY(${r.y}deg)`;}; }
+    });
+    add({ id:'rps', category:'تصادفی و سرگرمی', name:'✂️ سنگ کاغذ قیچی', icon:'✂️',
+      desc:'بازی کلاسیک سنگ-کاغذ-قیچی در مقابل کامپیوتر. سنگ قیچی را می‌شکند، قیچی کاغذ را می‌برد، کاغذ سنگ را می‌پوشاند.',
+      usage:'یکی از سه گزینه را انتخاب کنید. کامپیوتر همزمان انتخاب می‌کند و نتیجه نمایش داده می‌شود.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>✂️ بازی</h2><div style="display:flex;gap:0.5rem;justify-content:center"><button class="btn" data-v="0">🪨 سنگ</button><button class="btn" data-v="1">📄 کاغذ</button><button class="btn" data-v="2">✂️ قیچی</button></div><div class="result" id="${id}_res"></div>`; const choices=['سنگ','کاغذ','قیچی']; c.querySelectorAll('button[data-v]').forEach(b=>b.onclick=()=>{const u=+b.dataset.v,comp=Math.floor(Math.random()*3);let r;if(u===comp)r='🤝 مساوی';else if((u===0&&comp===2)||(u===1&&comp===0)||(u===2&&comp===1))r='🎉 بردی';else r='😞 باختی';document.getElementById(`${id}_res`).innerText=`تو: ${choices[u]} | کامپیوتر: ${choices[comp]} | ${r}`;}); }
+    });
+    add({ id:'picker', category:'تصادفی و سرگرمی', name:'🎯 انتخاب تصادفی', icon:'🎯',
+      desc:'انتخاب تصادفی یک گزینه از لیست. برای قرعه‌کشی، تصمیم‌گیری‌های روزمره (کجا بریم؟ چی بخوریم؟) و انتخاب برنده مسابقه عالی است.',
+      usage:'گزینه‌ها را با کاما (،) از هم جدا کنید و دکمه انتخاب را بزنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🎯 انتخاب</h2><textarea class="tool-textarea" id="${id}_list" placeholder="گزینه‌ها را با کاما جدا کنید"></textarea><button class="btn" id="${id}_btn">🎲 انتخاب</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const items=document.getElementById(`${id}_list`).value.split(/[,،]/).map(s=>s.trim()).filter(Boolean);if(items.length)document.getElementById(`${id}_res`).innerText='🎉 '+items[Math.floor(Math.random()*items.length)];else document.getElementById(`${id}_res`).innerText='⚠️ لیست خالی است';}; }
+    });
+    add({ id:'magic8', category:'تصادفی و سرگرمی', name:'🎱 گوی جادویی', icon:'🎱',
+      desc:'شبیه‌ساز گوی جادویی (Magic 8-Ball) که به سوالات بله/خیر پاسخ‌های تصادفی می‌دهد. نسخه دیجیتال اسباب‌بازی کلاسیک دهه ۱۹۵۰.',
+      usage:'در ذهن خود یک سوال بله/خیر بپرسید و دکمه را بزنید.',
+      render(c){ const answers=['حتماً','بدون شک','بله','احتمالاً','شاید','نمی‌دانم','بعید است','نه','هرگز']; const id=uid(); c.innerHTML=`<h2>🎱 گوی جادویی</h2><button class="btn" id="${id}_btn">🔮 بپرس</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText=answers[Math.floor(Math.random()*answers.length)];}; }
+    });
+    add({ id:'yesNo', category:'تصادفی و سرگرمی', name:'✅ بله/خیر', icon:'✅',
+      desc:'تصمیم‌گیر ساده بله/خیر. وقتی بین دو گزینه مردد هستید، این ابزار به شما کمک می‌کند.',
+      usage:'دکمه را بزنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>✅ بله یا خیر؟</h2><button class="btn" id="${id}_btn">🎲 بگو</button><div class="result" id="${id}_res" style="font-size:2rem;text-align:center"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{document.getElementById(`${id}_res`).innerText=Math.random()<0.5?'✅ بله':'❌ خیر';}; }
+    });
+
+    // ------------------- زمان (۴ ابزار) -------------------
+    add({ id:'stopwatch', category:'زمان', name:'⏱️ کرنومتر', icon:'⏱️',
+      desc:'زمان‌سنج دقیق با دقت صدم ثانیه. برای اندازه‌گیری زمان در ورزش، آشپزی، آزمایش‌ها و هر فعالیت زمان‌بندی‌شده کاربرد دارد.',
+      usage:'دکمه شروع (▶) را بزنید. با ⏸ توقف و با 🔄 صفر کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>⏱️ کرنومتر</h2><div style="font-size:2.5rem;text-align:center;margin:1rem 0" id="${id}_time">00:00:00.00</div><div style="display:flex;gap:0.5rem;justify-content:center"><button class="btn" id="${id}_start">▶</button><button class="btn" id="${id}_pause">⏸</button><button class="btn" id="${id}_reset">🔄</button></div>`; let sec=0,ms=0,interval; function update(){ms+=10;if(ms>=1000){ms=0;sec++;}const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;document.getElementById(`${id}_time`).innerText=`${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${Math.floor(ms/10).toString().padStart(2,'0')}`;} document.getElementById(`${id}_start`).onclick=()=>{if(!interval)interval=setInterval(update,10);}; document.getElementById(`${id}_pause`).onclick=()=>{clearInterval(interval);interval=null;}; document.getElementById(`${id}_reset`).onclick=()=>{clearInterval(interval);interval=null;sec=0;ms=0;document.getElementById(`${id}_time`).innerText='00:00:00.00';}; }
+    });
+    add({ id:'pomodoro', category:'زمان', name:'🍅 پومودورو', icon:'🍅',
+      desc:'تکنیک مدیریت زمان پومودورو: ۲۵ دقیقه کار متمرکز + ۵ دقیقه استراحت. این روش توسط فرانچسکو سیریلو ابداع شد و بهره‌وری را افزایش می‌دهد.',
+      usage:'دکمه شروع را بزنید و ۲۵ دقیقه بدون وقفه کار کنید. بعد از اتمام، ۵ دقیقه استراحت کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🍅 پومودورو</h2><div style="font-size:2.5rem;text-align:center;margin:1rem 0" id="${id}_timer">25:00</div><div style="display:flex;gap:0.5rem;justify-content:center"><button class="btn" id="${id}_start">▶ شروع</button><button class="btn" id="${id}_reset">🔄 ریست</button></div>`; let total=25*60,interval; function update(){const m=Math.floor(total/60),s=total%60;document.getElementById(`${id}_timer`).innerText=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;if(total<=0){clearInterval(interval);interval=null;Toast.show('⏰ زمان تمام شد! استراحت کنید.');}} document.getElementById(`${id}_start`).onclick=()=>{if(!interval){interval=setInterval(()=>{total--;update();},1000);}}; document.getElementById(`${id}_reset`).onclick=()=>{clearInterval(interval);interval=null;total=25*60;update();}; update(); }
+    });
+    add({ id:'worldClock', category:'زمان', name:'🌍 ساعت جهانی', icon:'🌍',
+      desc:'نمایش زمان شهرهای مختلف جهان. تهران UTC+3:30، نیویورک UTC-4، لندن UTC+0، توکیو UTC+9. برای مسافرت و تماس‌های بین‌المللی مفید است.',
+      usage:'شهر مورد نظر را از لیست انتخاب کنید. زمان به صورت زنده نمایش داده می‌شود.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🌍 ساعت جهانی</h2><select class="tool-select" id="${id}_tz"><option value="0">🇮🇷 تهران (UTC+3:30)</option><option value="-4">🇺🇸 نیویورک (UTC-4)</option><option value="0">🇬🇧 لندن (UTC+0)</option><option value="8">🇯🇵 توکیو (UTC+9)</option></select><div class="result" id="${id}_res"></div>`; function update(){const off=+document.getElementById(`${id}_tz`).value;const d=new Date();d.setHours(d.getHours()+off-3.5);document.getElementById(`${id}_res`).innerText=d.toLocaleTimeString('fa-IR');} document.getElementById(`${id}_tz`).onchange=update; update(); }
+    });
+    add({ id:'dateDiff', category:'زمان', name:'📆 اختلاف تاریخ', icon:'📆',
+      desc:'محاسبه فاصله بین دو تاریخ به روز. برای محاسبه مدت پروژه، روزهای مانده تا رویداد و فاصله سنی کاربرد دارد.',
+      usage:'دو تاریخ را انتخاب کنید. نتیجه تعداد روزهای بین آن‌هاست.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>📆 اختلاف</h2><input type="date" class="tool-input" id="${id}_d1"><input type="date" class="tool-input" id="${id}_d2"><button class="btn" id="${id}_btn">🧮 محاسبه</button><div class="result" id="${id}_res"></div>`; document.getElementById(`${id}_btn`).onclick=()=>{const d1=new Date(document.getElementById(`${id}_d1`).value),d2=new Date(document.getElementById(`${id}_d2`).value);const resEl=document.getElementById(`${id}_res`);if(isNaN(d1.getTime())||isNaN(d2.getTime())){resEl.innerText='⚠️ تاریخ معتبر انتخاب کنید';return;}resEl.innerText=`${Math.abs(Math.floor((d2-d1)/86400000))} روز`;}; }
+    });
+
+    // ------------------- کاربردی (۶ ابزار) -------------------
+    add({ id:'notes', category:'کاربردی', name:'📒 یادداشت', icon:'📒',
+      desc:'دفترچه یادداشت ساده با قابلیت ذخیره در حافظه مرورگر. یادداشت‌ها حتی پس از بستن برنامه باقی می‌مانند. برای نوشتن سریع ایده‌ها، لیست خرید و... عالی است.',
+      usage:'متن خود را بنویسید و دکمه ذخیره را بزنید. با دکمه بارگیری، یادداشت قبلی را بازیابی کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>📒 یادداشت</h2><textarea class="tool-textarea" id="${id}_note" style="min-height:150px"></textarea><button class="btn" id="${id}_save">💾 ذخیره</button><button class="btn" id="${id}_load">📂 بارگیری</button><button class="btn" id="${id}_clear">🗑️ پاک کردن</button>`; document.getElementById(`${id}_save`).onclick=()=>{localStorage.setItem('note',document.getElementById(`${id}_note`).value);Toast.show('یادداشت ذخیره شد');}; document.getElementById(`${id}_load`).onclick=()=>{document.getElementById(`${id}_note`).value=localStorage.getItem('note')||'';}; document.getElementById(`${id}_clear`).onclick=()=>{if(confirm('یادداشت پاک شود؟')){document.getElementById(`${id}_note`).value='';localStorage.removeItem('note');Toast.show('یادداشت پاک شد');}}; document.getElementById(`${id}_note`).value=localStorage.getItem('note')||''; }
+    });
+    add({ id:'todo', category:'کاربردی', name:'✅ لیست کارها', icon:'✅',
+      desc:'مدیریت وظایف روزانه با قابلیت تیک زدن (انجام‌شده) و حذف. لیست کارها (To-Do List) یکی از موثرترین روش‌های بهره‌وری است.',
+      usage:'کار جدید را در کادر وارد کنید و ➕ را بزنید. برای علامت‌گذاری انجام‌شده روی ✅ و برای حذف روی ❌ کلیک کنید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>✅ کارها</h2><div style="display:flex;gap:0.5rem"><input class="tool-input" id="${id}_task" placeholder="کار جدید..."><button class="btn" id="${id}_add">➕</button></div><ul id="${id}_list" style="list-style:none;padding:0"></ul>`; let tasks=JSON.parse(localStorage.getItem('tasks')||'[]'); function render(){const ul=document.getElementById(`${id}_list`);ul.innerHTML='';tasks.forEach((t,i)=>{const li=document.createElement('li');li.style.cssText='display:flex;justify-content:space-between;padding:0.5rem;margin:0.3rem 0;background:var(--glass);border-radius:8px';li.innerHTML=`<span style="${t.done?'text-decoration:line-through;opacity:0.5':''}">${escapeHtml(t.text)}</span><div><button data-i="${i}" class="done-btn">${t.done?'↩️':'✅'}</button><button data-i="${i}" class="del-btn">❌</button></div>`;li.querySelector('.done-btn').onclick=()=>{tasks[i].done=!tasks[i].done;save();render();};li.querySelector('.del-btn').onclick=()=>{tasks.splice(i,1);save();render();};ul.appendChild(li);});} function save(){localStorage.setItem('tasks',JSON.stringify(tasks));} document.getElementById(`${id}_add`).onclick=()=>{const v=document.getElementById(`${id}_task`).value.trim();if(v){tasks.push({text:v,done:false});save();render();document.getElementById(`${id}_task`).value='';}}; render(); }
+    });
+    add({ id:'flashlight', category:'کاربردی', name:'🔦 چراغ قوه', icon:'🔦',
+      desc:'نمایش صفحه کاملاً سفید با نور حداکثر. در تاریکی برای پیدا کردن مسیر یا اشیا مفید است.',
+      usage:'روی صفحه بزنید تا خاموش/روشن شود. همچنین می‌توانید رنگ را تغییر دهید.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🔦 چراغ قوه</h2><div id="${id}_flash" style="width:100%;height:200px;background:white;border-radius:10px;cursor:pointer"></div><button class="btn" id="${id}_color">🎨 تغییر رنگ</button>`; let on=true; document.getElementById(`${id}_flash`).onclick=function(){on=!on;this.style.background=on?document.getElementById(`${id}_color`).dataset.color||'white':'#333';}; document.getElementById(`${id}_color`).onclick=function(){const colors=['white','#ff0','#0ff','#f0f','#0f0','#f80'];const c=colors[Math.floor(Math.random()*colors.length)];this.dataset.color=c;if(on)document.getElementById(`${id}_flash`).style.background=c;}; }
+    });
+    add({ id:'deviceInfo', category:'کاربردی', name:'📱 مشخصات دستگاه', icon:'📱',
+      desc:'نمایش اطلاعات سخت‌افزاری و نرم‌افزاری دستگاه شامل نوع مرورگر، سیستم‌عامل، وضوح صفحه، حافظه و تعداد هسته‌های CPU. برای عیب‌یابی و توسعه مفید است.',
+      usage:'اطلاعات به صورت خودکار نمایش داده می‌شوند.',
+      render(c){ c.innerHTML=`<h2>📱 اطلاعات</h2><div class="result">User Agent: ${navigator.userAgent}\nPlatform: ${navigator.platform}\nزبان: ${navigator.language}\nصفحه: ${screen.width}x${screen.height}\nآنلاین: ${navigator.onLine?'بله':'خیر'}\nهسته CPU: ${navigator.hardwareConcurrency||'نامشخص'}\nرم دستگاه: ${navigator.deviceMemory||'نامشخص'} GB</div>`; }
+    });
+    add({ id:'compass', category:'کاربردی', name:'🧭 قطب‌نما', icon:'🧭',
+      desc:'قطب‌نمای دیجیتال با استفاده از سنسور مغناطیسی (مگنتومتر) دستگاه. جهت شمال مغناطیسی را نشان می‌دهد. برای جهت‌یابی در طبیعت و شهر کاربرد دارد.',
+      usage:'دسترسی به موقعیت مکانی را تأیید کنید، سپس دکمه شروع را بزنید. دقت بستگی به سنسور دستگاه شما دارد.',
+      render(c){ const id=uid(); c.innerHTML=`<h2>🧭 قطب‌نما</h2><div style="font-size:5rem;text-align:center" id="${id}_arrow">⬆️</div><button class="btn" id="${id}_start">📍 شروع</button>`; document.getElementById(`${id}_start`).onclick=()=>{Permissions.request('location').then(granted=>{if(granted&&window.DeviceOrientationEvent){window.addEventListener('deviceorientation',e=>{document.getElementById(`${id}_arrow`).style.transform=`rotate(${e.alpha||0}deg)`;});}else{document.getElementById(`${id}_arrow`).innerText='⛔';}});}; }
+    });
+    add({ id:'ruler', category:'کاربردی', name:'📏 خط‌کش', icon:'📏',
+      desc:'خط‌کش روی صفحه برای اندازه‌گیری تقریبی. هر خط نشان‌دهنده ۱ میلی‌متر است. دقت آن به تراکم پیکسلی صفحه نمایش شما بستگی دارد.',
+      usage:'جسم را روی صفحه قرار دهید و اندازه آن را با خطوط مقایسه کنید.',
+      render(c){ c.innerHTML=`<h2>📏 خط‌کش</h2><div style="width:100%;height:40px;background:repeating-linear-gradient(to left,var(--text) 0,var(--text) 1px,transparent 1px,transparent 10px);margin:1rem 0"></div><p style="color:var(--text2)">هر خط = ۱ میلی‌متر (تقریبی)</p>`; }
+    });
+
+    // ------------------- ابزارهای تکمیلی (۱۹ ابزار) -------------------
+    const extraTools = [
+      {id:'paint',name:'🎨 نقاشی',desc:'بوم نقاشی دیجیتال با قابلیت کشیدن خطوط با انگشت یا ماوس. برای طراحی سریع و سرگرمی.'},
+      {id:'clickCounter',name:'🔢 شمارنده',desc:'شمارش تعداد کلیک‌ها. برای شمارش موجودی، افراد و...'},
+      {id:'barcode',name:'📊 بارکد',desc:'تولید بارکد خطی (Code-128) برای محصولات و انبارداری.'},
+      {id:'unitConverterPlus',name:'➕ واحدهای بیشتر',desc:'تبدیل واحدهای تخصصی‌تر مانند نیرو، فرکانس و ظرفیت خازن.'},
+      {id:'passwordAnalyzer',name:'🔍 تحلیل رمز',desc:'تحلیل دقیق‌تر رمز عبور شامل بررسی الگوهای رایج و زمان حدس.'},
+      {id:'hashCompare',name:'🔬 مقایسه هش',desc:'مقایسه دو مقدار هش برای بررسی یکپارچگی فایل.'},
+      {id:'uuidValidator',name:'✅ اعتبارسنجی UUID',desc:'بررسی صحت ساختار یک UUID.'},
+      {id:'regexLibrary',name:'📚 کتابخانه Regex',desc:'مجموعه الگوهای regex آماده برای ایمیل، شماره تلفن، URL و...'},
+      {id:'cssFormatter',name:'🎨 فرمت CSS',desc:'زیباسازی و فشرده‌سازی کد CSS.'},
+      {id:'jsFormatter',name:'📜 فرمت JS',desc:'زیباسازی و فشرده‌سازی کد JavaScript.'},
+      {id:'xmlFormatter',name:'📋 فرمت XML',desc:'زیباسازی و مرتب‌سازی کد XML.'},
+      {id:'sqlFormatter',name:'🗄️ فرمت SQL',desc:'زیباسازی و مرتب‌سازی کد SQL.'},
+      {id:'htaccess',name:'🔧 htaccess',desc:'تولید فایل htaccess برای تنظیمات سرور آپاچی.'},
+      {id:'robots',name:'🤖 robots.txt',desc:'تولید فایل robots.txt برای مدیریت خزنده‌های موتور جستجو.'},
+      {id:'sitemap',name:'🗺️ Sitemap',desc:'تولید نقشه سایت XML برای بهبود سئو.'},
+      {id:'metaTags',name:'🏷️ Meta Tags',desc:'تولید تگ‌های متا HTML برای سئو و شبکه‌های اجتماعی.'},
+      {id:'openGraph',name:'📢 Open Graph',desc:'تولید تگ‌های Open Graph برای نمایش بهتر لینک‌ها در فیسبوک و تلگرام.'},
+      {id:'twitterCard',name:'🐦 Twitter Card',desc:'تولید تگ‌های Twitter Card برای نمایش بهتر لینک‌ها در توییتر.'},
+      {id:'schema',name:'📊 Schema.org',desc:'تولید نشانه‌گذاری Schema.org (JSON-LD) برای سئوی پیشرفته.'}
+    ];
+    extraTools.forEach(t => {
+      add({ id:t.id, category:'کاربردی', name:t.name, icon:'🔧', desc:t.desc, usage:'این ابزار در نسخه‌های آینده تکمیل خواهد شد.',
+        render(c){ c.innerHTML=`<h2>${t.name}</h2><p style="color:var(--text2);text-align:center">⚡ این ابزار در نسخه بعدی فعال خواهد شد.</p>`; }
+      });
+    });
+  },
+  buildCategoryMap() {
+    this.categoryMap.clear();
+    this.tools.forEach(t => {
+      if (!this.categoryMap.has(t.category)) this.categoryMap.set(t.category, []);
+      this.categoryMap.get(t.category).push(t);
+    });
+  },
+  getToolsByCategory(cat) { return this.categoryMap.get(cat) || []; },
+  getToolById(id) { return this.tools.find(t => t.id === id); },
+  search(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    return this.tools.filter(t => t.name.includes(q) || (t.desc&&t.desc.includes(q)) || t.category.includes(q) || (t.usage&&t.usage.includes(q)));
+  }
+};
+
+/* ========== NAVIGATION ========== */
+const Navigation = {
+  init() { this.renderHome(); },
+  refreshCurrentView() {
+    if (App.state.currentView === 'home') this.renderHome();
+    else if (App.state.currentView === 'category' && App.state.currentCategory) this.renderCategory(App.state.currentCategory);
+    else if (App.state.currentView === 'favorites') this.showFavorites();
+    else if (App.state.currentView === 'recent') this.showRecent();
+    else if (App.state.currentView === 'search') { const q = document.getElementById('globalSearch')?.value?.trim(); if (q) SearchEngine.showResults(q); else this.renderHome(); }
+    else this.renderHome();
+  },
+  renderHome() {
+    App.state.currentView='home'; App.state.currentCategory=null; App.state.currentToolId=null;
+    const main=document.getElementById('main');
+    const cats=[...ToolRegistry.categoryMap.keys()];
+    main.innerHTML=`<div class="grid">${cats.map(cat=>`<div class="card" data-cat="${escapeHtml(cat)}">${this.getCatSVG(cat)}<span class="name">${escapeHtml(cat)}</span></div>`).join('')}</div>`;
+    main.querySelectorAll('.card').forEach(card=>card.addEventListener('click',()=>this.renderCategory(card.dataset.cat)));
+  },
+  renderCategory(cat) {
+    App.state.currentView='category'; App.state.currentCategory=cat; App.state.viewHistory=['home'];
+    const main=document.getElementById('main');
+    let tools=ToolRegistry.getToolsByCategory(cat);
+    if (App.state.sortMode==='alpha') tools=[...tools].sort((a,b)=>a.name.localeCompare(b.name,'fa'));
+    main.innerHTML=`<div class="tool-header"><button class="back-btn" id="backBtn">←</button><input class="tool-input" id="catSearch" placeholder="جستجو در ${escapeHtml(cat)}..." style="flex:1;margin:0"><button class="icon-btn" id="sortBtn">🔤</button></div><div class="grid" id="toolGrid">${this.renderCards(tools)}</div>`;
+    document.getElementById('backBtn').onclick=()=>this.renderHome();
+    document.getElementById('sortBtn').onclick=()=>{App.state.sortMode=App.state.sortMode==='alpha'?'default':'alpha';App.saveState();this.renderCategory(cat);};
+    document.getElementById('catSearch').oninput=debounce(function(){const q=this.value.toLowerCase();const filtered=tools.filter(t=>t.name.includes(q)||t.desc?.includes(q));document.getElementById('toolGrid').innerHTML=Navigation.renderCards(filtered);Navigation.attachCardEvents();},150);
+    this.attachCardEvents();
+  },
+  renderTool(tool) {
+    App.state.currentView='tool'; App.state.currentToolId=tool.id; App.state.viewHistory.push('tool');
+    if(!App.state.recent.includes(tool.id)){App.state.recent.unshift(tool.id);App.saveState();}
+    const main=document.getElementById('main');
+    main.innerHTML=`<div class="tool-header"><button class="back-btn" id="backBtn">←</button><h3 style="margin:0">${tool.icon} ${escapeHtml(tool.name)}</h3><button class="fav-btn" id="favStar">${Favorites.isFav(tool.id)?'⭐':'☆'}</button></div><div id="toolContent"></div>`;
+    document.getElementById('backBtn').onclick=()=>this.goBack();
+    document.getElementById('favStar').onclick=()=>{Favorites.toggle(tool.id);document.getElementById('favStar').textContent=Favorites.isFav(tool.id)?'⭐':'☆';};
+    if(tool.render)tool.render(document.getElementById('toolContent'));
+  },
+  showFavorites() {
+    App.state.currentView='favorites';
+    const main=document.getElementById('main');
+    const tools=Favorites.getTools();
+    main.innerHTML=`<div class="tool-header"><button class="back-btn" id="backBtn">←</button><h3>⭐ علاقه‌مندی‌ها</h3></div><div class="grid">${tools.length?this.renderCards(tools):'<p style="grid-column:1/-1;color:var(--text2)">موردی اضافه نشده</p>'}</div>`;
+    document.getElementById('backBtn').onclick=()=>this.renderHome();
+    this.attachCardEvents();
+  },
+  showRecent() {
+    App.state.currentView='recent';
+    const main=document.getElementById('main');
+    const tools=App.state.recent.map(id=>ToolRegistry.getToolById(id)).filter(Boolean);
+    main.innerHTML=`<div class="tool-header"><button class="back-btn" id="backBtn">←</button><h3>🕐 اخیراً بازدید شده</h3></div><div class="grid">${tools.length?this.renderCards(tools):'<p style="grid-column:1/-1;color:var(--text2)">هنوز ابزاری باز نکرده‌اید</p>'}</div>`;
+    document.getElementById('backBtn').onclick=()=>this.renderHome();
+    this.attachCardEvents();
+  },
+  renderCards(tools) {
+    return tools.map(t=>`<div class="card" data-id="${t.id}"><span class="fav-star ${Favorites.isFav(t.id)?'active':''}" data-fav="${t.id}">⭐</span><span class="info-dot" data-info="${t.id}">?</span><span class="icon">${t.icon}</span><span class="name">${escapeHtml(t.name)}</span></div>`).join('');
+  },
+  attachCardEvents() {
+    document.querySelectorAll('.card').forEach(card=>{card.onclick=function(e){if(e.target.classList.contains('fav-star')){e.stopPropagation();const id=e.target.dataset.fav;Favorites.toggle(id);e.target.classList.toggle('active',Favorites.isFav(id));return;}if(e.target.classList.contains('info-dot')){e.stopPropagation();const tool=ToolRegistry.getToolById(e.target.dataset.info);if(tool)showTooltipModal(tool);return;}const tool=ToolRegistry.getToolById(card.dataset.id);if(tool)Navigation.renderTool(tool);};});
+  },
+  goBack() { if(App.state.viewHistory.length>0){const prev=App.state.viewHistory.pop();if(prev==='home'||!App.state.currentCategory)this.renderHome();else this.renderCategory(App.state.currentCategory);}else this.renderHome(); },
+  refreshIfFavView() { if(App.state.currentView==='favorites')this.showFavorites(); },
+  getCatSVG(cat) {
+    const svgs={
+      'مبدل‌ها':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat1"><stop offset="0%" stop-color="#00d4aa"/><stop offset="100%" stop-color="#4facfe"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat1)"/><path d="M20 32h24M32 20v24" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>`,
+      'ریاضیات':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat2"><stop offset="0%" stop-color="#f093fb"/><stop offset="100%" stop-color="#f5576c"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat2)"/><text x="32" y="40" text-anchor="middle" fill="#fff" font-size="28">∑</text></svg>`,
+      'امنیت':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat3"><stop offset="0%" stop-color="#4facfe"/><stop offset="100%" stop-color="#00f2fe"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat3)"/><path d="M32 12l-10 8v10c0 12 10 20 10 20s10-8 10-20V20z" fill="#fff"/></svg>`,
+      'توسعه‌دهندگان':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat4"><stop offset="0%" stop-color="#a18cd1"/><stop offset="100%" stop-color="#fbc2eb"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat4)"/><text x="32" y="40" text-anchor="middle" fill="#fff" font-size="24">&lt;/&gt;</text></svg>`,
+      'سلامت':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat5"><stop offset="0%" stop-color="#fa709a"/><stop offset="100%" stop-color="#fee140"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat5)"/><path d="M32 48c-10-8-16-14-16-22 0-4 3-8 8-8 3 0 5 1 8 4 3-3 5-4 8-4 5 0 8 4 8 8 0 8-6 14-16 22z" fill="#fff"/></svg>`,
+      'مالی':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat6"><stop offset="0%" stop-color="#f6d365"/><stop offset="100%" stop-color="#fda085"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat6)"/><text x="32" y="40" text-anchor="middle" fill="#fff" font-size="28">$</text></svg>`,
+      'تصادفی و سرگرمی':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat8"><stop offset="0%" stop-color="#ff9a9e"/><stop offset="100%" stop-color="#fecfef"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat8)"/><text x="32" y="40" text-anchor="middle" fill="#fff" font-size="28">🎲</text></svg>`,
+      'زمان':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat9"><stop offset="0%" stop-color="#43e97b"/><stop offset="100%" stop-color="#38f9d7"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat9)"/><circle cx="32" cy="32" r="20" fill="none" stroke="#fff" stroke-width="3"/><path d="M32 18v14l10 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`,
+      'کاربردی':`<svg class="cat-svg" viewBox="0 0 64 64"><defs><linearGradient id="gcat10"><stop offset="0%" stop-color="#a8edea"/><stop offset="100%" stop-color="#fed6e3"/></linearGradient></defs><circle cx="32" cy="32" r="28" fill="url(#gcat10)"/><text x="32" y="40" text-anchor="middle" fill="#333" font-size="28">🛠</text></svg>`
+    };
+    return svgs[cat]||`<svg class="cat-svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="var(--accent)"/><text x="32" y="40" text-anchor="middle" fill="#fff" font-size="24">${cat[0]}</text></svg>`;
+  }
+};
+
+function showTooltipModal(tool) {
+  const overlay=document.getElementById('overlay'), modal=document.getElementById('modal');
+  modal.innerHTML=`<button class="close" onclick="document.getElementById('overlay').classList.add('hidden')">✕</button><h3>${tool.icon} ${escapeHtml(tool.name)}</h3><p><strong>📝 این ابزار چیست و چه کاربردی دارد:</strong></p><p>${escapeHtml(tool.desc||'توضیحی ثبت نشده')}</p><p><strong>📖 راهنمای استفاده:</strong></p><p>${escapeHtml(tool.usage||'راهنمایی ثبت نشده')}</p><p style="color:var(--accent)"><strong>💡 نکته:</strong> این ابزار کاملاً آفلاین کار می‌کند و نیازی به اینترنت ندارد. تمام محاسبات در دستگاه خود شما انجام می‌شود.</p><button class="btn" onclick="document.getElementById('overlay').classList.add('hidden')">متوجه شدم</button>`;
+  overlay.classList.remove('hidden');
+}
+
+/* ========== SEARCH ENGINE ========== */
+const SearchEngine = {
+  init() {
+    const input=document.getElementById('globalSearch');
+    input.addEventListener('input', debounce(()=>{const q=input.value.trim();if(!q){Navigation.renderHome();return;}this.showResults(q);},200));
+  },
+  showResults(q) {
+    App.state.currentView='search';
+    const main=document.getElementById('main');
+    const results=ToolRegistry.search(q);
+    main.innerHTML=`<div class="tool-header"><button class="back-btn" id="backBtn">←</button><h3>نتایج برای "${escapeHtml(q)}"</h3></div><div class="grid">${results.length?Navigation.renderCards(results):'<p style="grid-column:1/-1;color:var(--text2)">نتیجه‌ای یافت نشد</p>'}</div>`;
+    document.getElementById('backBtn').onclick=()=>Navigation.renderHome();
+    Navigation.attachCardEvents();
+  }
+};
+
+/* ========== GRADIENT STYLES ========== */
+const gradientStyles=document.createElement('style');
+gradientStyles.textContent=`#gcat1 stop:first-child{stop-color:#00d4aa}#gcat1 stop:last-child{stop-color:#4facfe}#gcat2 stop:first-child{stop-color:#f093fb}#gcat2 stop:last-child{stop-color:#f5576c}#gcat3 stop:first-child{stop-color:#4facfe}#gcat3 stop:last-child{stop-color:#00f2fe}#gcat4 stop:first-child{stop-color:#a18cd1}#gcat4 stop:last-child{stop-color:#fbc2eb}#gcat5 stop:first-child{stop-color:#fa709a}#gcat5 stop:last-child{stop-color:#fee140}#gcat6 stop:first-child{stop-color:#f6d365}#gcat6 stop:last-child{stop-color:#fda085}#gcat8 stop:first-child{stop-color:#ff9a9e}#gcat8 stop:last-child{stop-color:#fecfef}#gcat9 stop:first-child{stop-color:#43e97b}#gcat9 stop:last-child{stop-color:#38f9d7}#gcat10 stop:first-child{stop-color:#a8edea}#gcat10 stop:last-child{stop-color:#fed6e3}`;
+document.head.appendChild(gradientStyles);
+
+/* ========== START APP ========== */
+document.addEventListener('DOMContentLoaded', ()=>App.init());
+</script>
+</body>
+</html>
